@@ -1,13 +1,16 @@
 # ── Bog'liqliklar ──────────────────────────────────────────────────
 node_modules/
 
-# ── Shaxsiy ma'lumotlar ────────────────────────────────────────────
-# db/ ichida o'quvchilarning ism-familiyasi, telefon raqami,
-# pasport / ID raqami, ota-ona raqami va yashash joyi saqlanadi.
-# Bunday ma'lumot repoga tushmasligi kerak.
-# Server bo'sh bazada avtomatik seed qiladi (server.js), shuning uchun
-# klon qilib darhol ishga tushirish mumkin.
-db/
+# ── Baza ───────────────────────────────────────────────────────────
+# Savollar va topshiriqlar repoda saqlanadi: server aynan shu mazmun
+# bilan ishga tushishi kerak, seed namunalari bilan emas.
+#
+# Qolgan hamma narsa chiqarilmaydi — o'quvchilarning ism-familiyasi,
+# telefoni, pasport / ID raqami, ota-ona raqami, manzili, javoblari,
+# urinishlari va ovozli topshiriq natijalari.
+db/*
+!db/questions.json
+!db/tasks.json
 
 # O'quvchilarning ovoz yozuvlari: a-<vaqt>-<kod>.webm
 # Diktant audiosi (dictation-*.ogg) esa repoda qoladi — u o'qituvchi

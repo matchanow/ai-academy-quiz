@@ -12,9 +12,12 @@ node server.js
 
 `http://localhost:3000` — o'quvchi uchun, `/admin.html` — o'qituvchi uchun.
 
-Ma'lumotlar bazasi repoda yo'q (shaxsiy ma'lumotlar sababli). Birinchi
-ishga tushganda `server.js` bo'sh bazani namuna savollar va topshiriqlar
-bilan to'ldiradi, admin hisobini ham o'zi yaratadi.
+Savollar (`db/questions.json`) va ovozli topshiriqlar (`db/tasks.json`)
+repoda saqlanadi — server aynan shu mazmun bilan ishga tushadi.
+
+O'quvchilarning ma'lumotlari repoga kirmaydi: ism-familiya, telefon,
+pasport / ID, ota-ona raqami, manzil, javoblar va ovoz yozuvlari. Ular
+birinchi ishga tushganda bo'sh holda yaratiladi.
 
 ## Tuzilishi
 

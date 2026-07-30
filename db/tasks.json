@@ -1,0 +1,110 @@
+[
+  {
+    "id": 1,
+    "audio_url": "/uploads/audio/dictation-1.ogg",
+    "type": "dictation",
+    "sort_order": 1,
+    "title": "Diktant 1 — Sun'iy intellekt",
+    "text": "Sun'iy intellekt inson aqli bajaradigan vazifalarni kompyuter yordamida hal qilish texnologiyasidir.",
+    "created_at": "2026-07-27T13:53:59.518Z"
+  },
+  {
+    "id": 2,
+    "audio_url": "/uploads/audio/dictation-2.ogg",
+    "type": "dictation",
+    "sort_order": 2,
+    "title": "Diktant 2 — Mashina o'qitish",
+    "text": "Mashina o'qitish algoritmlari katta hajmdagi ma'lumotlardan qonuniyatlarni topib, kelgusi natijalarni bashorat qiladi.",
+    "created_at": "2026-07-27T13:53:59.519Z"
+  },
+  {
+    "id": 3,
+    "audio_url": "/uploads/audio/dictation-3.ogg",
+    "type": "dictation",
+    "sort_order": 3,
+    "title": "Diktant 3 — Nutq texnologiyalari",
+    "text": "Nutqni matnga aylantiruvchi tizimlar ovozli buyruqlarni tushunadi va ularni yozma ko'rinishga o'tkazadi.",
+    "created_at": "2026-07-27T13:53:59.520Z"
+  },
+  {
+    "id": 11,
+    "type": "dictation",
+    "title": "Diktant 4 — Sanalar va raqamlar",
+    "text": "Kurs 2026-yil 5-fevralda boshlanadi va 12 hafta davom etadi. Har bir guruhda 18 nafar tinglovchi tahsil oladi.",
+    "audio_url": "/uploads/audio/dictation-4.ogg",
+    "sort_order": 4,
+    "created_at": "2026-07-27T16:16:16.420Z"
+  },
+  {
+    "id": 12,
+    "type": "dictation",
+    "title": "Diktant 5 — Kundalik matn",
+    "text": "Ertaga soat to‘qqizda kutubxonada uchrashamiz. Iltimos, daftaringiz va qalamingizni olib kelishni unutmang.",
+    "audio_url": "/uploads/audio/dictation-5.ogg",
+    "sort_order": 5,
+    "created_at": "2026-07-27T16:16:16.422Z"
+  },
+  {
+    "id": 6,
+    "type": "reading",
+    "title": "Mashq 1 — Oddiy kundalik matn",
+    "text": "Bugun havo salqin va biroz shamolli. Ertalab harorat 14 daraja Selsiy, kunduzi esa 22 darajagacha ko‘tarilishi kutilmoqda. Uydan chiqishda yengil kurtka kiyish tavsiya etiladi. Yo‘llarda harakat odatdagidan biroz zich, shuning uchun manzilingizga ertaroq yo‘lga chiqing.",
+    "audio_url": null,
+    "sort_order": 6,
+    "created_at": "2026-07-27T15:48:38.418Z"
+  },
+  {
+    "id": 7,
+    "type": "reading",
+    "title": "Mashq 2 — Raqamlar, sanalar va miqdorlar",
+    "text": "2026-yil 15-mart kuni, soat 14:30 da, Toshkent shahrida yangi axborot texnologiyalari markazi ochildi. Loyiha qiymati 3 milliard 750 million AQSh dollarini tashkil etdi. Tadbirda 25 ta davlatdan 400 nafardan ortiq mutaxassis ishtirok etdi.",
+    "audio_url": null,
+    "sort_order": 7,
+    "created_at": "2026-07-27T15:48:38.422Z"
+  },
+  {
+    "id": 8,
+    "type": "reading",
+    "title": "Mashq 3 — Hissiy va undovli nutq",
+    "text": "Eshitdingizmi?! Bugun yangi sun’iy intellekt platformasi ishga tushirildi! Ajoyib, shunday emasmi? U o‘zbek tilidagi matnlarni tez, aniq va ravon o‘qiy oladi. Siz ham uni sinab ko‘rishga tayyormisiz?",
+    "audio_url": null,
+    "sort_order": 8,
+    "created_at": "2026-07-27T15:48:38.425Z"
+  },
+  {
+    "id": 9,
+    "type": "reading",
+    "title": "Mashq 4 — Murakkab talaffuz va ilmiy uslub",
+    "text": "Sun’iy intellekt, mashinaviy o‘rganish va tabiiy tilni qayta ishlash texnologiyalari zamonaviy dasturiy ta’minotning asosiy yo‘nalishlaridan hisoblanadi. Ushbu tizimlar matnni tahlil qilish, nutqni aniqlash, ovozni sintez qilish hamda turli tillar o‘rtasida avtomatik tarjima qilish imkonini beradi.",
+    "audio_url": null,
+    "sort_order": 9,
+    "created_at": "2026-07-27T15:48:38.430Z"
+  },
+  {
+    "id": 10,
+    "type": "reading",
+    "title": "Mashq 5 — Telefon raqamlari, sana va vaqt",
+    "text": "Murojaat uchun telefon raqami: +998 90 123 45 67. Uchrashuv 2026-yil 20-aprel kuni soat 09:15 da boshlanadi. Ro‘yxatdan o‘tish 08:30 dan 09:00 gacha davom etadi.",
+    "audio_url": null,
+    "sort_order": 10,
+    "created_at": "2026-07-27T15:48:38.438Z"
+  },
+  {
+    "id": 4,
+    "audio_url": null,
+    "type": "reading",
+    "sort_order": 11,
+    "title": "Mashq 6 — Neyron tarmoqlar",
+    "text": "Sun'iy neyron tarmoqlar inson miyasidagi neyronlar ishlash tamoyiliga taqlid qiladi. Har bir bog'lanish o'zining og'irligiga ega bo'lib, tarmoq o'qitilganda aynan shu og'irliklar o'zgaradi.",
+    "created_at": "2026-07-27T13:53:59.521Z"
+  },
+  {
+    "id": 5,
+    "audio_url": null,
+    "type": "reading",
+    "sort_order": 12,
+    "title": "Mashq 7 — Ma'lumotlar xavfsizligi",
+    "text": "Internetda shaxsiy ma'lumotlarni himoya qilish uchun kuchli parol qo'yish, ikki bosqichli tasdiqlashni yoqish va noma'lum havolalarni ochmaslik tavsiya etiladi.",
+    "created_at": "2026-07-27T13:53:59.521Z"
+  }
+]

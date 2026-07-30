@@ -1,0 +1,129 @@
+[
+  {
+    "id": 29,
+    "question_text": "Ketma-ketlikni davom ettiring: 2, 6, 12, 20, 30, ?",
+    "option_a": "36",
+    "option_b": "40",
+    "option_c": "42",
+    "option_d": "44",
+    "correct_answer": "c",
+    "order_num": 1,
+    "time_seconds": 30,
+    "created_at": "2026-07-27T00:00:00.000Z"
+  },
+  {
+    "id": 32,
+    "question_text": "Quyidagi ketma-ketlikni davom ettiring: A, C, F, J, O, ?",
+    "option_a": "T",
+    "option_b": "U",
+    "option_c": "V",
+    "option_d": "W",
+    "correct_answer": "b",
+    "time_seconds": 40,
+    "image_urls": [],
+    "order_num": 2,
+    "created_at": "2026-07-27T15:58:54.866Z"
+  },
+  {
+    "id": 33,
+    "question_text": "Quyidagi ketma-ketlikni davom ettiring: AZ, BY, CX, DW, ?",
+    "option_a": "EV",
+    "option_b": "EU",
+    "option_c": "FV",
+    "option_d": "EX",
+    "correct_answer": "a",
+    "time_seconds": 35,
+    "image_urls": [],
+    "order_num": 3,
+    "created_at": "2026-07-27T15:58:54.870Z"
+  },
+  {
+    "id": 31,
+    "question_text": "Kubning barcha tomonlari qizil rangga bo‘yaldi. So‘ng u 27 ta teng kichik kubga bo‘lindi. Nechta kichik kubning faqat bitta tomoni qizil bo‘ladi?",
+    "option_a": "6",
+    "option_b": "8",
+    "option_c": "12",
+    "option_d": "24",
+    "correct_answer": "a",
+    "time_seconds": 45,
+    "image_urls": [],
+    "order_num": 4,
+    "created_at": "2026-07-27T15:58:54.862Z"
+  },
+  {
+    "id": 39,
+    "question_text": "Quyidagi jadvaldagi qonuniyatni aniqlang. Savol belgisi o‘rniga qaysi shakl kelishi kerak?",
+    "option_a": "Uchburchak — 2 ta nuqta",
+    "option_b": "Uchburchak — 3 ta nuqta",
+    "option_c": "Kvadrat — 3 ta nuqta",
+    "option_d": "Doira — 3 ta nuqta",
+    "correct_answer": "b",
+    "order_num": 5,
+    "time_seconds": 45,
+    "created_at": "2026-07-27T18:42:49.716Z",
+    "image_urls": [
+      "/uploads/q-matrix-puzzle.svg"
+    ],
+    "option_images": {
+      "a": "/uploads/q-matrix-opt-a.svg",
+      "b": "/uploads/q-matrix-opt-b.svg",
+      "c": "/uploads/q-matrix-opt-c.svg",
+      "d": "/uploads/q-matrix-opt-d.svg"
+    }
+  },
+  {
+    "id": 40,
+    "question_text": "Ketma-ketlikdagi qonuniyatni aniqlang. 5-katakda qaysi variant turishi kerak?",
+    "option_a": "Yuqori qatorda: chapda qora, o‘ngda oq",
+    "option_b": "Yuqori o‘ngda qora, quyi chapda oq",
+    "option_c": "Yuqori o‘ngda oq, quyi chapda qora",
+    "option_d": "Yuqori chapda qora, quyi o‘ngda oq",
+    "correct_answer": "a",
+    "order_num": 6,
+    "time_seconds": 45,
+    "created_at": "2026-07-27T18:45:45.169Z",
+    "image_urls": [
+      "/uploads/q-dots-puzzle.svg"
+    ],
+    "option_images": {
+      "a": "/uploads/q-dots-opt-a.svg",
+      "b": "/uploads/q-dots-opt-b.svg",
+      "c": "/uploads/q-dots-opt-c.svg",
+      "d": "/uploads/q-dots-opt-d.svg"
+    }
+  },
+  {
+    "id": 41,
+    "question_text": "Har bir shaklda nuqtalar soni shaklning tomonlari soniga teng. Qaysi variant bu qoidaga bo‘ysunmaydi?",
+    "option_a": "A — uchburchak",
+    "option_b": "B — kvadrat",
+    "option_c": "C — beshburchak",
+    "option_d": "D — oltiburchak",
+    "option_e": "E — sakkizburchak",
+    "correct_answer": "d",
+    "order_num": 7,
+    "time_seconds": 50,
+    "created_at": "2026-07-27T18:51:17.758Z",
+    "image_urls": [],
+    "option_images": {
+      "a": "/uploads/q-poly-opt-a.svg",
+      "b": "/uploads/q-poly-opt-b.svg",
+      "c": "/uploads/q-poly-opt-c.svg",
+      "d": "/uploads/q-poly-opt-d.svg",
+      "e": "/uploads/q-poly-opt-e.svg"
+    }
+  },
+  {
+    "id": 36,
+    "question_text": "Kompyuterda CPU (Central Processing Unit) qanday vazifani bajaradi?",
+    "option_a": "Ma’lumotlarni uzoq muddat saqlaydi",
+    "option_b": "Dasturlarni ishga tushiradi va hisob-kitoblarni bajaradi",
+    "option_c": "Internet tezligini oshiradi",
+    "option_d": "Ekranga tasvir chiqaradi",
+    "correct_answer": "b",
+    "time_seconds": 25,
+    "image_urls": [],
+    "order_num": 8,
+    "created_at": "2026-07-27T15:58:54.882Z"
+  }
+]
