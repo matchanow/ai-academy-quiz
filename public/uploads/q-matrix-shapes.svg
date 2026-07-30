@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 548 754" width="548" height="754">
+<rect width="548" height="754" fill="#fff"/>
+<g transform="translate(16,16) scale(1)">
+    <rect x="0" y="0" width="160" height="160" rx="14"
+          fill="#FAFAF9"
+          stroke="#E8E8E4" stroke-width="1.5"
+          />
+    <circle cx="80" cy="80" r="53" fill="none" stroke="#111" stroke-width="3.4"/><circle cx="80" cy="80" r="9" fill="#111"/>
+  </g><g transform="translate(194,16) scale(1)">
+    <rect x="0" y="0" width="160" height="160" rx="14"
+          fill="#FAFAF9"
+          stroke="#E8E8E4" stroke-width="1.5"
+          />
+    <circle cx="80" cy="80" r="53" fill="none" stroke="#111" stroke-width="3.4"/><circle cx="63" cy="80" r="9" fill="#111"/><circle cx="97" cy="80" r="9" fill="#111"/>
+  </g><g transform="translate(372,16) scale(1)">
+    <rect x="0" y="0" width="160" height="160" rx="14"
+          fill="#FAFAF9"
+          stroke="#E8E8E4" stroke-width="1.5"
+          />
+    <circle cx="80" cy="80" r="53" fill="none" stroke="#111" stroke-width="3.4"/><circle cx="46" cy="80" r="9" fill="#111"/><circle cx="80" cy="80" r="9" fill="#111"/><circle cx="114" cy="80" r="9" fill="#111"/>
+  </g><g transform="translate(16,194) scale(1)">
+    <rect x="0" y="0" width="160" height="160" rx="14"
+          fill="#FAFAF9"
+          stroke="#E8E8E4" stroke-width="1.5"
+          />
+    <rect x="27" y="29" width="106" height="102" fill="none" stroke="#111" stroke-width="3.4"/><circle cx="80" cy="80" r="9" fill="#111"/>
+  </g><g transform="translate(194,194) scale(1)">
+    <rect x="0" y="0" width="160" height="160" rx="14"
+          fill="#FAFAF9"
+          stroke="#E8E8E4" stroke-width="1.5"
+          />
+    <rect x="27" y="29" width="106" height="102" fill="none" stroke="#111" stroke-width="3.4"/><circle cx="63" cy="80" r="9" fill="#111"/><circle cx="97" cy="80" r="9" fill="#111"/>
+  </g><g transform="translate(372,194) scale(1)">
+    <rect x="0" y="0" width="160" height="160" rx="14"
+          fill="#FAFAF9"
+          stroke="#E8E8E4" stroke-width="1.5"
+          />
+    <rect x="27" y="29" width="106" height="102" fill="none" stroke="#111" stroke-width="3.4"/><circle cx="46" cy="80" r="9" fill="#111"/><circle cx="80" cy="80" r="9" fill="#111"/><circle cx="114" cy="80" r="9" fill="#111"/>
+  </g><g transform="translate(16,372) scale(1)">
+    <rect x="0" y="0" width="160" height="160" rx="14"
+          fill="#FAFAF9"
+          stroke="#E8E8E4" stroke-width="1.5"
+          />
+    <polygon points="80,24 139,134 21,134" fill="none" stroke="#111" stroke-width="3.4" stroke-linejoin="round"/><circle cx="80" cy="106" r="9" fill="#111"/>
+  </g><g transform="translate(194,372) scale(1)">
+    <rect x="0" y="0" width="160" height="160" rx="14"
+          fill="#FAFAF9"
+          stroke="#E8E8E4" stroke-width="1.5"
+          />
+    <polygon points="80,24 139,134 21,134" fill="none" stroke="#111" stroke-width="3.4" stroke-linejoin="round"/><circle cx="63" cy="106" r="9" fill="#111"/><circle cx="97" cy="106" r="9" fill="#111"/>
+  </g><g transform="translate(372,372) scale(1)">
+    <rect x="0" y="0" width="160" height="160" rx="14"
+          fill="none"
+          stroke="#AAA" stroke-width="2.5"
+          stroke-dasharray="9 7"/>
+    <text x="80" y="95" font-family="Segoe UI, system-ui, sans-serif" font-size="42" fill="#999" text-anchor="middle">?</text>
+  </g><line x1="16" y1="558" x2="532" y2="558" stroke="#E0E0DC" stroke-width="1.5"/><g transform="translate(25,584) scale(0.675)">
+    <rect x="0" y="0" width="160" height="160" rx="14"
+          fill="#FAFAF9"
+          stroke="#E8E8E4" stroke-width="1.5"
+          />
+    <polygon points="80,24 139,134 21,134" fill="none" stroke="#111" stroke-width="3.4" stroke-linejoin="round"/><circle cx="63" cy="106" r="9" fill="#111"/><circle cx="97" cy="106" r="9" fill="#111"/>
+  </g><text x="79" y="722"
+            font-family="Segoe UI, system-ui, sans-serif" font-size="23" font-weight="600"
+            fill="#111" text-anchor="middle">A</text><g transform="translate(155,584) scale(0.675)">
+    <rect x="0" y="0" width="160" height="160" rx="14"
+          fill="#FAFAF9"
+          stroke="#E8E8E4" stroke-width="1.5"
+          />
+    <polygon points="80,24 139,134 21,134" fill="none" stroke="#111" stroke-width="3.4" stroke-linejoin="round"/><circle cx="46" cy="106" r="9" fill="#111"/><circle cx="80" cy="106" r="9" fill="#111"/><circle cx="114" cy="106" r="9" fill="#111"/>
+  </g><text x="209" y="722"
+            font-family="Segoe UI, system-ui, sans-serif" font-size="23" font-weight="600"
+            fill="#111" text-anchor="middle">B</text><g transform="translate(285,584) scale(0.675)">
+    <rect x="0" y="0" width="160" height="160" rx="14"
+          fill="#FAFAF9"
+          stroke="#E8E8E4" stroke-width="1.5"
+          />
+    <rect x="27" y="29" width="106" height="102" fill="none" stroke="#111" stroke-width="3.4"/><circle cx="46" cy="80" r="9" fill="#111"/><circle cx="80" cy="80" r="9" fill="#111"/><circle cx="114" cy="80" r="9" fill="#111"/>
+  </g><text x="339" y="722"
+            font-family="Segoe UI, system-ui, sans-serif" font-size="23" font-weight="600"
+            fill="#111" text-anchor="middle">C</text><g transform="translate(415,584) scale(0.675)">
+    <rect x="0" y="0" width="160" height="160" rx="14"
+          fill="#FAFAF9"
+          stroke="#E8E8E4" stroke-width="1.5"
+          />
+    <circle cx="80" cy="80" r="53" fill="none" stroke="#111" stroke-width="3.4"/><circle cx="46" cy="80" r="9" fill="#111"/><circle cx="80" cy="80" r="9" fill="#111"/><circle cx="114" cy="80" r="9" fill="#111"/>
+  </g><text x="469" y="722"
+            font-family="Segoe UI, system-ui, sans-serif" font-size="23" font-weight="600"
+            fill="#111" text-anchor="middle">D</text>
+</svg>

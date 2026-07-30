@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 990 258" width="990" height="258">
+<rect width="990" height="258" fill="#fff"/>
+<g transform="translate(18,18)">
+    <rect x="0" y="0" width="170" height="170" rx="14" fill="#FAFAF9" stroke="#E8E8E4" stroke-width="1.5"/>
+    <polygon points="85.0,16.0 142.2,115.0 27.8,115.0" fill="none" stroke="#111" stroke-width="3.6" stroke-linejoin="round"/>
+    <circle cx="58.0" cy="96.0" r="8.5" fill="#111"/><circle cx="85.0" cy="96.0" r="8.5" fill="#111"/><circle cx="112.0" cy="96.0" r="8.5" fill="#111"/>
+  </g><text x="103" y="224" font-family="Segoe UI, system-ui, sans-serif"
+    font-size="25" font-weight="600" fill="#111" text-anchor="middle">A</text><g transform="translate(214,18)">
+    <rect x="0" y="0" width="170" height="170" rx="14" fill="#FAFAF9" stroke="#E8E8E4" stroke-width="1.5"/>
+    <rect x="43.24" y="40.24" width="83.52" height="83.52" fill="none" stroke="#111" stroke-width="3.6"/>
+    <circle cx="71.5" cy="72.0" r="8.5" fill="#111"/><circle cx="98.5" cy="72.0" r="8.5" fill="#111"/><circle cx="71.5" cy="98.0" r="8.5" fill="#111"/><circle cx="98.5" cy="98.0" r="8.5" fill="#111"/>
+  </g><text x="299" y="224" font-family="Segoe UI, system-ui, sans-serif"
+    font-size="25" font-weight="600" fill="#111" text-anchor="middle">B</text><g transform="translate(410,18)">
+    <rect x="0" y="0" width="170" height="170" rx="14" fill="#FAFAF9" stroke="#E8E8E4" stroke-width="1.5"/>
+    <polygon points="85.0,18.0 145.9,62.2 122.6,133.8 47.4,133.8 24.1,62.2" fill="none" stroke="#111" stroke-width="3.6" stroke-linejoin="round"/>
+    <circle cx="58.0" cy="79.0" r="8.5" fill="#111"/><circle cx="85.0" cy="79.0" r="8.5" fill="#111"/><circle cx="112.0" cy="79.0" r="8.5" fill="#111"/><circle cx="71.5" cy="105.0" r="8.5" fill="#111"/><circle cx="98.5" cy="105.0" r="8.5" fill="#111"/>
+  </g><text x="495" y="224" font-family="Segoe UI, system-ui, sans-serif"
+    font-size="25" font-weight="600" fill="#111" text-anchor="middle">C</text><g transform="translate(606,18)">
+    <rect x="0" y="0" width="170" height="170" rx="14" fill="#FAFAF9" stroke="#E8E8E4" stroke-width="1.5"/>
+    <polygon points="85.0,18.0 140.4,50.0 140.4,114.0 85.0,146.0 29.6,114.0 29.6,50.0" fill="none" stroke="#111" stroke-width="3.6" stroke-linejoin="round"/>
+    <circle cx="58.0" cy="72.0" r="8.5" fill="#111"/><circle cx="85.0" cy="72.0" r="8.5" fill="#111"/><circle cx="112.0" cy="72.0" r="8.5" fill="#111"/><circle cx="71.5" cy="98.0" r="8.5" fill="#111"/><circle cx="98.5" cy="98.0" r="8.5" fill="#111"/>
+  </g><text x="691" y="224" font-family="Segoe UI, system-ui, sans-serif"
+    font-size="25" font-weight="600" fill="#111" text-anchor="middle">D</text><g transform="translate(802,18)">
+    <rect x="0" y="0" width="170" height="170" rx="14" fill="#FAFAF9" stroke="#E8E8E4" stroke-width="1.5"/>
+    <polygon points="85.0,18.0 130.3,36.7 149.0,82.0 130.3,127.3 85.0,146.0 39.7,127.3 21.0,82.0 39.7,36.7" fill="none" stroke="#111" stroke-width="3.6" stroke-linejoin="round"/>
+    <circle cx="58.0" cy="59.0" r="8.5" fill="#111"/><circle cx="85.0" cy="59.0" r="8.5" fill="#111"/><circle cx="112.0" cy="59.0" r="8.5" fill="#111"/><circle cx="58.0" cy="85.0" r="8.5" fill="#111"/><circle cx="85.0" cy="85.0" r="8.5" fill="#111"/><circle cx="112.0" cy="85.0" r="8.5" fill="#111"/><circle cx="71.5" cy="111.0" r="8.5" fill="#111"/><circle cx="98.5" cy="111.0" r="8.5" fill="#111"/>
+  </g><text x="887" y="224" font-family="Segoe UI, system-ui, sans-serif"
+    font-size="25" font-weight="600" fill="#111" text-anchor="middle">E</text>
+</svg>

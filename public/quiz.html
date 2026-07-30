@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Academy — Test</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="icon" type="image/png" href="/assets/favicon.png"/>
+  <style>
+    /* ── Aylana taymer ── */
+    .timer-wrap {
+      position: relative; width: 82px; height: 82px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .timer-svg { position: absolute; top: 0; left: 0; transform: rotate(-90deg); }
+    .timer-track { fill: none; stroke: var(--brand-100); stroke-width: 6; }
+    .timer-ring  { fill: none; stroke: var(--brand-800); stroke-width: 6; stroke-linecap: round;
+                   transition: stroke-dashoffset 1s linear, stroke .4s; }
+    .timer-num {
+      position: relative; z-index: 1;
+      font-size: 20px; font-weight: 800; color: var(--brand-800);
+      transition: color .4s; line-height: 1; font-variant-numeric: tabular-nums;
+      letter-spacing: -.5px;
+    }
+
+    /* Test qoidasi haqida doimiy eslatma */
+    .rule-note {
+      background: var(--warning-light); color: #92400E;
+      border-top: 1px solid #F5D9AE;
+      padding: 9px 22px; font-size: 12.5px; font-weight: 650; text-align: center;
+    }
+
+    .q-header-row {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      gap: 14px; margin-bottom: 16px;
+    }
+
+    .timeout-flash { animation: flashWarn .3s ease 2; }
+    @keyframes flashWarn { 0%,100% { background: #fff; } 50% { background: var(--error-light); } }
+
+    /* ── Bosqich turi yorlig'i ── */
+    .kind-tag {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 11px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase;
+      padding: 5px 12px; border-radius: 99px; margin-bottom: 7px;
+    }
+    .kind-tag.question  { background: var(--brand-100); color: var(--brand-800); }
+    .kind-tag.dictation { background: var(--brand-800); color: #fff; }
+    .kind-tag.reading   { background: var(--gold-100);  color: var(--gold-600); }
+
+    /* ── Klaviatura yorliqlari ──────────────────────────────────────
+       Sichqonchasiz ishlayotgan o'quvchi qaysi tugma nima qilishini
+       ko'rib turishi kerak. */
+    /* ── Ovozli bosqichlar ── */
+    .t-label {
+      font-size: 11px; font-weight: 800; color: var(--brand-700);
+      text-transform: uppercase; letter-spacing: 1.5px; margin: 22px 0 9px;
+    }
+    .t-reading-text {
+      background: var(--brand-50); border: 1px solid var(--brand-100);
+      border-left: 5px solid var(--brand-800);
+      border-radius: var(--r); padding: 18px 22px;
+      font-size: 18px; line-height: 1.75; color: var(--text);
+    }
+    .t-typearea {
+      width: 100%; min-height: 150px; padding: 15px 17px; border-radius: var(--r);
+      border: 2px solid var(--border); font-size: 16.5px; line-height: 1.65;
+      font-family: inherit; color: var(--text); resize: vertical; outline: none;
+      transition: border-color .16s, box-shadow .16s;
+    }
+    .t-typearea:hover { border-color: var(--border-strong); }
+    .t-typearea:focus {
+      border-color: var(--brand-800); box-shadow: 0 0 0 4px var(--focus-halo);
+    }
+    .t-bar { display: flex; align-items: center; gap: 11px; flex-wrap: wrap; margin-top: 15px; }
+    .t-bar audio { height: 48px; }
+    .t-elapsed {
+      margin-left: auto; font-size: 16px; font-weight: 800; color: var(--brand-800);
+      font-variant-numeric: tabular-nums; display: flex; align-items: center; gap: 7px;
+    }
+    .t-elapsed small {
+      font-size: 10.5px; font-weight: 700; color: var(--text-faint);
+      text-transform: uppercase; letter-spacing: 1px;
+    }
+
+    .rec-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--error);
+               display: inline-block; animation: recpulse 1s ease-in-out infinite; }
+    @keyframes recpulse { 0%,100% { opacity: 1 } 50% { opacity: .25 } }
+    .t-wave { display: flex; align-items: flex-end; gap: 2px; height: 24px; }
+    .t-wave i { width: 3px; background: var(--brand-600); border-radius: 2px; height: 3px;
+                transition: height .08s linear; }
+
+    /* ── Rasmli variantlar ── */
+    .options.img-options {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 11px;
+    }
+    .img-options .option {
+      flex-direction: column; gap: 10px; padding: 16px 12px;
+      text-align: center; min-height: 0;
+    }
+    .img-options .option-img {
+      width: 100%; max-width: 122px; height: auto; border-radius: var(--r-sm);
+      pointer-events: none;
+    }
+    .img-options .option-letter { width: 34px; height: 34px; font-size: 13px; }
+    .img-options .option-check { margin-left: 0; }
+
+    /* ── Nuqta ko'rsatkichlari ── */
+    /* Nuqtalar bosiladigan tugmalar. Ko'rinishi kichik, ammo bosish
+       maydoni 28px — kichik nishonga bosish qiyin bo'lganlar uchun. */
+    .dots { display: flex; gap: 0; align-items: center; flex-wrap: wrap;
+            flex: 1; justify-content: center; }
+    .dots .dot {
+      width: 28px; height: 28px; padding: 0; border: none; background: none;
+      display: grid; place-items: center; cursor: pointer; border-radius: 50%;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .dots .dot::before {
+      content: ''; width: 10px; height: 10px; border-radius: 50%;
+      background: var(--border-strong);
+      transition: background .2s, transform .2s;
+    }
+    .dots .dot:hover::before  { transform: scale(1.35); background: var(--brand-400); }
+    .dots .dot.done::before   { background: var(--brand-500); }
+    .dots .dot.current::before{ background: var(--brand-800); transform: scale(1.7); }
+    /* Bajarilmagan bosqich — ichi bo'sh halqa, faqat rangga tayanmaymiz */
+    .dots .dot:not(.done):not(.current)::before {
+      background: #fff; box-shadow: inset 0 0 0 2px var(--border-strong);
+    }
+
+    /* ── Pastki tugmalar ── */
+    .finish-row { text-align: center; margin-top: 20px; }
+    .finish-row .btn { min-width: 240px; }
+
+    @media (max-width: 560px) {
+      .t-reading-text { font-size: 16.5px; padding: 15px 17px; }
+    }
+  </style>
+</head>
+<body class="quiz-page">
+
+<a href="#stepBody" class="skip-link">Savolga o'tish</a>
+
+<header class="quiz-topbar on-dark">
+  <div class="logo">
+    <img src="/assets/mark-white.png" alt=""/>
+    <span>AI Academy</span>
+  </div>
+  <div class="user-info">Salom, <strong id="userName">...</strong></div>
+</header>
+
+<div class="progress-wrap" id="progressWrap">
+  <div class="progress-bar-bg" role="progressbar" id="progressBar"
+       aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Test jarayoni">
+    <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+  </div>
+  <div class="progress-labels">
+    <span><strong id="progressLabel">1 / 1</strong> bosqich</span>
+    <span id="progressPct">0%</span>
+  </div>
+</div>
+<div class="rule-note" id="ruleNote">
+  Diqqat: test davomida boshqa oyna, ilova yoki vkladkaga o'tsangiz test bekor qilinadi
+  va kirish taqiqlanadi.
+</div>
+
+<!-- Ekran o'qiguvchi uchun: bosqich almashganda ovoz chiqariladi -->
+<div class="sr-only" aria-live="polite" aria-atomic="true" id="srStatus"></div>
+
+<div id="loadingState" class="quiz-body" style="padding-top:60px">
+  <div class="spinner"></div>
+  <p class="text-center text-muted">Yuklanmoqda...</p>
+</div>
+
+<div id="quizContent" class="quiz-body hidden">
+  <div class="question-card" id="questionCard">
+    <div class="q-header-row">
+      <div>
+        <span class="kind-tag question" id="kindTag">Test savoli</span>
+        <div class="q-number" id="qNumber">1</div>
+      </div>
+      <div class="timer-wrap" id="timerWrap" role="timer" aria-label="Butun testga qolgan vaqt">
+        <svg class="timer-svg" width="82" height="82" viewBox="0 0 82 82" aria-hidden="true">
+          <circle class="timer-track" cx="41" cy="41" r="35"/>
+          <circle class="timer-ring" id="timerRing" cx="41" cy="41" r="35"
+            stroke-dasharray="219.9" stroke-dashoffset="0"/>
+        </svg>
+        <div class="timer-num" id="timerNum">15:00</div>
+      </div>
+    </div>
+
+    <h1 class="q-text" id="qText" tabindex="-1"></h1>
+    <div id="stepBody"></div>
+
+    <div class="quiz-nav">
+      <button class="btn btn-ghost" id="btnPrev" onclick="goBack()">← Oldingi</button>
+      <span class="dots" id="dotIndicators" role="group" aria-label="Bosqichlar"></span>
+      <button class="btn btn-primary hidden" id="btnNext" onclick="finishStep()">Keyingi →</button>
+    </div>
+  </div>
+
+  <div class="finish-row">
+    <button class="btn btn-success btn-lg" onclick="finishAll()">Testni yakunlash</button>
+  </div>
+</div>
+
+<!-- Qoidabuzarlik: chiqarib yuboriladi, qaytib kirish yo'q -->
+<div id="lockOverlay" class="on-dark" style="
+  display:none; position:fixed; inset:0; z-index:9999;
+  background:rgba(4,25,14,.97); color:#fff;
+  flex-direction:column; align-items:center; justify-content:center;
+  gap:18px; text-align:center; padding:32px;">
+  <div style="font-size:24px; font-weight:800">Test bekor qilindi</div>
+  <div style="font-size:15px; color:rgba(255,255,255,.75); max-width:400px; line-height:1.7">
+    Test davomida boshqa oynaga o'tilgani aniqlandi. Bu qoida buzilishi hisoblanadi,
+    shuning uchun testingiz bekor qilindi va kirish taqiqlandi.<br><br>
+    Qayta urinish uchun o'qituvchiga murojaat qiling.
+  </div>
+  <a href="/" class="btn btn-lg" style="margin-top:6px; background:#fff; color:var(--brand-800);">
+    Bosh sahifaga
+  </a>
+</div>
+
+<div id="resultsContent" class="results-wrap hidden">
+  <div class="result-hero">
+    <img src="/assets/mark-white.png" alt="" style="width:84px;height:auto;margin:0 auto 20px;display:block;opacity:.95"/>
+    <div class="result-message">Rahmat!</div>
+    <div class="result-sub">Javoblaringiz saqlandi.<br>Natijalarni o‘qituvchi ko‘rib chiqadi.</div>
+  </div>
+  <div class="text-center" style="margin-top:20px">
+    <a href="/" class="btn btn-outline btn-lg">Bosh sahifaga qaytish</a>
+  </div>
+</div>
+
+<script>
+const user = JSON.parse(localStorage.getItem('academyUser') || 'null');
+if (!user || user.is_admin) window.location.href = '/';
+if (user.quiz_completed) window.location.href = '/';
+
+document.getElementById('userName').textContent = user.name;
+
+const LABELS  = { a: 'A', b: 'B', c: 'C', d: 'D', e: 'E' };
+const OPTIONS = ['a', 'b', 'c', 'd', 'e'];   // E ixtiyoriy
+
+let steps = [];              // [{ key, kind, data }]
+let currentIndex = 0;
+const answers = {};          // savol id -> 'a'..'e'
+const doneTasks = {};        // topshiriq id -> true
+let quizSubmitted = false;
+let quizFinished = false;
+
+const PROGRESS_KEY = 'quizProgress_' + user.id;
+
+function esc(s) {
+  return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+}
+function fmtTime(ms) {
+  const t = Math.max(0, Math.round(ms / 1000));
+  return String(Math.floor(t / 60)).padStart(2,'0') + ':' + String(t % 60).padStart(2,'0');
+}
+
+// ── Progress saqlash ────────────────────────────────────────────────
+function saveProgress() {
+  localStorage.setItem(PROGRESS_KEY, JSON.stringify({
+    currentIndex, answers, doneTasks, quizSubmitted,
+    order: steps.map(s => s.key)
+  }));
+}
+function clearProgress() { localStorage.removeItem(PROGRESS_KEY); }
+
+window.addEventListener('beforeunload', e => {
+  if (quizFinished) return;
+  saveProgress();
+  e.preventDefault();
+  e.returnValue = '';
+});
+
+/* ── Qoidabuzarlik nazorati ──────────────────────────────────────────
+   Ikki xil holat bor va ikkalasi ham tutilishi kerak:
+
+   1) Vkladka butunlay yashiriladi (boshqa vkladka, ilova, ekran o'chishi)
+      → visibilitychange ishlaydi.
+   2) Oyna ko'rinib turadi, lekin fokus boshqa oynaga o'tadi — masalan
+      yonma-yon ochilgan ikkinchi oyna. Bunda visibilitychange
+      ISHLAMAYDI, shuning uchun window.blur va document.hasFocus()
+      ham tekshiriladi.
+
+   Yolg'on bloklanishning oldini olish uchun:
+   - fokus yo'qolgach 1.2 s kutamiz va qayta tekshiramiz, ya'ni bir
+     lahzalik uzilish hisoblanmaydi;
+   - mikrofon ruxsati oynasi va alert() fokusni tortib oladi — o'sha
+     paytda nazorat vaqtincha o'chiriladi (pauseGuard);
+   - nazorat sahifa bir marta fokus olgandan keyin yoqiladi, aks holda
+     fonda yuklangan sahifa darhol bloklanardi. */
+const GRACE_MS = 1200;      // shu muddat ichida qaytsa — kechiriladi
+
+let violationSent = false;
+let guardArmed = false;
+let guardPausedUntil = 0;
+let focusLostAt = 0;        // fokus BIRINCHI marta yo'qolgan payt
+let lostReason = '';
+let blurTimer = null;
+
+/** Nazoratni ms muddatga to'xtatadi (brauzer dialoglari uchun) va
+ *  kutilayotgan bloklashni bekor qiladi. */
+function pauseGuard(ms) {
+  guardPausedUntil = Date.now() + ms;
+  focusRegained();
+}
+
+function guardActive() {
+  return guardArmed && !quizFinished && !violationSent && Date.now() > guardPausedUntil;
+}
+
+/** Fokus yo'qoldi. Kutish muddati fokus yo'qolgan paytga bog'lanadi —
+ *  aks holda har sekundlik zaxira tekshiruv muddatni cheksiz surib,
+ *  bloklash hech qachon ishlamas edi. */
+function onFocusLost(reason) {
+  if (!guardActive()) return;
+  if (!focusLostAt) { focusLostAt = Date.now(); lostReason = reason; }
+  clearTimeout(blurTimer);
+  blurTimer = setTimeout(
+    () => {
+      if (!guardActive()) return;
+      if (document.hasFocus() && !document.hidden) { focusRegained(); return; }
+      reportViolation(lostReason);
+    },
+    Math.max(0, GRACE_MS - (Date.now() - focusLostAt))
+  );
+}
+
+function focusRegained() {
+  clearTimeout(blurTimer);
+  blurTimer = null;
+  focusLostAt = 0;
+}
+
+/** Nazorat sahifa fokusda bo'lganda yoqiladi. */
+function armGuard() {
+  if (document.hasFocus() && !document.hidden) guardArmed = true;
+}
+
+window.addEventListener('blur', () => onFocusLost("test oynasidan chiqildi — boshqa oyna faollashdi"));
+window.addEventListener('focus', () => { focusRegained(); armGuard(); });
+
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) onFocusLost("test davomida boshqa oynaga o'tildi");
+  else focusRegained();
+});
+
+// Zaxira tekshiruv: blur hodisasi kelmagan holatlarni ham tutadi
+setInterval(() => {
+  if (!guardActive()) return;
+  if (!document.hasFocus() || document.hidden) onFocusLost("test oynasi fokusda emas");
+  else if (focusLostAt) focusRegained();
+}, 500);
+
+/** Alert fokusni oladi — undan oldin nazoratni to'xtatamiz. */
+function safeAlert(msg) { pauseGuard(30000); alert(msg); pauseGuard(1500); }
+
+async function reportViolation(reason) {
+  if (quizFinished || violationSent) return;
+  violationSent = true;
+  quizFinished = true;
+  stopTimer(); stopElapsed(); stopSpeak();
+  if (recorder) { try { recorder.stop(); } catch {} }
+
+  clearProgress();
+  localStorage.removeItem('academyUser');
+
+  try {
+    await fetch('/api/quiz/violation', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user_id: user.id, reason })
+    });
+  } catch { /* aloqa yo'q bo'lsa ham ekranni ko'rsatamiz */ }
+
+  showLock();
+}
+
+function showLock() {
+  document.getElementById('lockOverlay').style.display = 'flex';
+}
+
+// ── Butun testga bitta taymer ───────────────────────────────────────
+const CIRCUMFERENCE = 2 * Math.PI * 35;
+let timerInterval = null;
+let deadlineAt = 0;
+let totalMs = 15 * 60 * 1000;
+let timeUp = false;
+
+/** Muddat serverdan olinadi, shuning uchun sahifani qayta yuklash
+ *  vaqtni tiklamaydi. */
+function startGlobalTimer(remainingMs, durationMs) {
+  totalMs = durationMs || remainingMs || 1;
+  deadlineAt = Date.now() + Math.max(0, remainingMs);
+  clearInterval(timerInterval);
+  tickTimer();
+  // Date.now() ga tayanamiz: brauzer intervalni sekinlashtirsa ham
+  // qolgan vaqt to'g'ri hisoblanadi.
+  timerInterval = setInterval(tickTimer, 500);
+}
+function stopTimer() { clearInterval(timerInterval); timerInterval = null; }
+
+function tickTimer() {
+  const left = deadlineAt - Date.now();
+  renderTimer(left, totalMs);
+  if (left <= 0 && !timeUp) {
+    timeUp = true;
+    stopTimer();
+    onTimeUp();
+  }
+}
+
+function renderTimer(remainingMs, total) {
+  const ring = document.getElementById('timerRing');
+  const num  = document.getElementById('timerNum');
+  if (!ring || !num) return;
+  const ratio = Math.max(0, Math.min(1, remainingMs / total));
+  ring.style.strokeDashoffset = CIRCUMFERENCE * (1 - ratio);
+  // Yashil → sariq → qizil. Rang yolg'iz signal emas: raqam ham ko'rinadi.
+  if (ratio > 0.5)       { ring.style.stroke = '#0A4629'; num.style.color = '#0A4629'; }
+  else if (ratio > 0.25) { ring.style.stroke = '#B45309'; num.style.color = '#B45309'; }
+  else                   { ring.style.stroke = '#C2261B'; num.style.color = '#C2261B'; }
+  num.textContent = fmtTime(Math.max(0, remainingMs));
+}
+
+/** Vaqt tugadi — javoblar saqlanadi va test yopiladi. */
+function onTimeUp() {
+  announce('Vaqt tugadi. Test yakunlanmoqda.');
+  const card = document.getElementById('questionCard');
+  if (card) {
+    card.classList.add('timeout-flash');
+    setTimeout(() => card.classList.remove('timeout-flash'), 700);
+  }
+  finishAll(true);
+}
+
+// ── Sarflangan vaqt (ovozli bosqichlar) ─────────────────────────────
+let elapsedStart = 0, elapsedHandle = null;
+
+function startElapsed() {
+  if (elapsedHandle) return;
+  elapsedStart = Date.now();
+  const el = document.getElementById('elapsedNum');
+  elapsedHandle = setInterval(() => {
+    if (el) el.textContent = fmtTime(Date.now() - elapsedStart);
+  }, 200);
+}
+function stopElapsed() {
+  if (!elapsedHandle) return 0;
+  clearInterval(elapsedHandle);
+  elapsedHandle = null;
+  return Date.now() - elapsedStart;
+}
+
+// ── Brauzer ovozi (TTS) ─────────────────────────────────────────────
+let voices = [];
+function loadVoices() { voices = (window.speechSynthesis && window.speechSynthesis.getVoices()) || []; }
+loadVoices();
+if (window.speechSynthesis) window.speechSynthesis.onvoiceschanged = loadVoices;
+
+function pickVoice() {
+  for (const p of ['uz', 'tr', 'ru', 'en']) {
+    const v = voices.find(v => String(v.lang || '').toLowerCase().startsWith(p));
+    if (v) return v;
+  }
+  return voices[0] || null;
+}
+function speak(text, onEnd) {
+  if (!window.speechSynthesis) { onEnd && onEnd(); return; }
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  const v = pickVoice();
+  if (v) { u.voice = v; u.lang = v.lang; }
+  u.rate = 0.88;
+  u.onend = () => onEnd && onEnd();
+  u.onerror = () => onEnd && onEnd();
+  window.speechSynthesis.speak(u);
+}
+function stopSpeak() { if (window.speechSynthesis) window.speechSynthesis.cancel(); }
+
+// ── Yuklash ─────────────────────────────────────────────────────────
+function shuffleRandom(list) {
+  const out = list.slice();
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const tmp = out[i]; out[i] = out[j]; out[j] = tmp;
+  }
+  return out;
+}
+
+async function loadAll() {
+  try {
+    // Sessiyani ochamiz — muddat serverda hisoblanadi
+    const sRes = await fetch('/api/quiz/start', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user_id: user.id })
+    });
+    const session = await sRes.json();
+    if (session.restricted) {
+      localStorage.removeItem('academyUser');
+      document.getElementById('loadingState').classList.add('hidden');
+      showLock();
+      return;
+    }
+    if (!sRes.ok) throw new Error('sessiya ochilmadi');
+
+    const [qRes, tRes] = await Promise.all([fetch('/api/questions'), fetch('/api/tasks')]);
+    const questions = await qRes.json();
+    const tasks = await tRes.json();
+
+    const all = questions.map(q => ({ key: 'q:' + q.id, kind: 'question', data: q }))
+      .concat(tasks.map(t => ({ key: 't:' + t.id, kind: t.type, data: t })));
+
+    // Boshlangan urinishda tartib saqlanadi, yangi urinishda qaytadan aralashadi
+    let saved = null;
+    try { saved = JSON.parse(localStorage.getItem(PROGRESS_KEY) || 'null'); } catch {}
+    const byKey = new Map(all.map(s => [s.key, s]));
+    const restored = (saved && Array.isArray(saved.order))
+      ? saved.order.map(k => byKey.get(k)).filter(Boolean) : [];
+
+    steps = (restored.length === all.length) ? restored : shuffleRandom(all);
+
+    document.getElementById('loadingState').classList.add('hidden');
+    document.getElementById('quizContent').classList.remove('hidden');
+    buildDots();
+
+    if (saved && restored.length === all.length) {
+      Object.assign(answers, saved.answers || {});
+      Object.assign(doneTasks, saved.doneTasks || {});
+      quizSubmitted = !!saved.quizSubmitted;
+      showStep(saved.currentIndex || 0);
+    } else {
+      showStep(0);
+    }
+
+    // Taymer bosqichlar chizilgandan keyin ishga tushadi
+    startGlobalTimer(session.remaining_ms, session.duration_ms);
+    if (session.expired) onTimeUp();
+
+    // Nazorat faqat shu yerdan boshlanadi — yuklanish paytida emas
+    armGuard();
+  } catch {
+    document.getElementById('loadingState').innerHTML =
+      '<div class="alert alert-error">Yuklab bo\'lmadi. Sahifani yangilang.</div>';
+  }
+}
+
+// ── Nuqta ko'rsatkichlari ───────────────────────────────────────────
+/** Bosqich bajarilganmi? */
+function stepDone(s) {
+  return s.kind === 'question'
+    ? answers[s.data.id] !== undefined
+    : !!doneTasks[s.data.id];
+}
+function allDone() { return steps.length > 0 && steps.every(stepDone); }
+
+/** from'dan keyingi birinchi bajarilmagan bosqich (aylanib qidiradi).
+ *  Hammasi bajarilgan bo'lsa -1. */
+function nextUnfinished(from) {
+  for (let k = 1; k <= steps.length; k++) {
+    const i = (from + k) % steps.length;
+    if (!stepDone(steps[i])) return i;
+  }
+  return -1;
+}
+
+function buildDots() {
+  const c = document.getElementById('dotIndicators');
+  c.innerHTML = steps.map((_, i) =>
+    `<button type="button" class="dot" id="dot-${i}" onclick="jumpTo(${i})"></button>`).join('');
+}
+
+function updateDots() {
+  steps.forEach((s, i) => {
+    const d = document.getElementById('dot-' + i);
+    if (!d) return;
+    const done = stepDone(s);
+    d.className = 'dot' + (i === currentIndex ? ' current' : (done ? ' done' : ''));
+    d.title = `${i + 1}-bosqich — ${done ? 'bajarilgan' : 'bajarilmagan'}`;
+    d.setAttribute('aria-label', d.title);
+    d.setAttribute('aria-current', i === currentIndex ? 'step' : 'false');
+  });
+}
+
+/** Nuqta bosilganda o'sha bosqichga o'tadi. Ochiq turgan ovozli
+ *  bosqichdagi ish avval saqlanadi — aks holda yozilgan matn yo'qoladi. */
+async function jumpTo(index) {
+  if (quizFinished || index === currentIndex) return;
+  await saveCurrentStep();
+  stopSpeak();
+  showStep(index);
+}
+
+/** «Keyingi» tugmasining ko'rinishi va yozuvi. */
+function refreshNav() {
+  const btn = document.getElementById('btnNext');
+  const isLast = currentIndex === steps.length - 1;
+  if (isLast && allDone()) {
+    btn.classList.add('hidden');          // yakunlash tugmasi qoladi
+    return;
+  }
+  btn.classList.remove('hidden');
+  btn.textContent = (isLast && !allDone())
+    ? "Bajarilmaganiga o'tish →"
+    : 'Keyingi →';
+}
+
+// ── Bosqichni chizish ───────────────────────────────────────────────
+const KIND_LABEL = { question: 'Test savoli', dictation: 'Diktant', reading: "O'qish mashqi" };
+
+/** Sarlavhadan "Diktant 1 —", "Mashq 5 —" kabi raqamli prefiksni olib
+ *  tashlaydi. Bosqichlar aralashtirilgani uchun raqam chalkashtiradi:
+ *  "Mashq 5" uchinchi bo'lib chiqishi mumkin. Bosqich turi yuqoridagi
+ *  yorliqda allaqachon yozilgan. Admin panelda to'liq nom qoladi. */
+function cleanTitle(t) {
+  const raw = String(t || '').trim();
+  return raw.replace(/^\S+\s*\d+\s*[—–-]\s*/, '').trim() || raw;
+}
+
+function showStep(index) {
+  // Chegaradan chiqmaymiz. Ilgari bu yerda finishAll() chaqirilardi va
+  // oxirgi bosqichda «Keyingi» bosilsa test kutilmaganda yakunlanardi.
+  if (!steps.length) return;
+  index = Math.max(0, Math.min(index, steps.length - 1));
+  stopElapsed(); stopSpeak();          // umumiy taymer to'xtamaydi
+  currentIndex = index;
+
+  const s = steps[index];
+  const total = steps.length;
+  const pct = Math.round(((index + 1) / total) * 100);
+
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = (index + 1) + ' / ' + total;
+  document.getElementById('progressPct').textContent = pct + '%';
+
+  document.getElementById('progressBar').setAttribute('aria-valuenow', pct);
+
+  const tag = document.getElementById('kindTag');
+  tag.className = 'kind-tag ' + s.kind;
+  tag.textContent = KIND_LABEL[s.kind];
+  document.getElementById('qNumber').textContent = '';
+
+  document.getElementById('btnPrev').style.visibility = index === 0 ? 'hidden' : 'visible';
+
+  const qText = document.getElementById('qText');
+  const body = document.getElementById('stepBody');
+  document.getElementById('btnNext').disabled = false;
+
+  if (s.kind === 'question') {
+    qText.textContent = s.data.question_text;
+    body.innerHTML = questionBody(s.data);
+    bindOptions(s.data);
+  } else {
+    qText.textContent = cleanTitle(s.data.title);
+    body.innerHTML = s.kind === 'dictation' ? dictationBody(s.data) : readingBody(s.data);
+  }
+  updateDots();
+  refreshNav();
+
+  announce(`${index + 1} / ${total} bosqich. ${KIND_LABEL[s.kind]}.`);
+  // Fokusni sarlavhaga qo'yamiz: ekran o'qiguvchi savolni o'qiydi,
+  // keyin Tab bilan variantlarga o'tiladi.
+  qText.focus({ preventScroll: true });
+  saveProgress();
+}
+
+// ── Test savoli ─────────────────────────────────────────────────────
+function questionBody(q) {
+  const imgs = Array.isArray(q.image_urls) ? q.image_urls : (q.image_url ? [q.image_url] : []);
+  const imgHtml = imgs.length
+    ? '<div style="text-align:center;margin-bottom:18px">' + imgs.map(u =>
+        `<img src="${esc(u)}" style="max-height:400px;max-width:100%;border-radius:10px;object-fit:contain"/>`).join('') + '</div>'
+    : '';
+  const oimg = q.option_images || null;
+  const keys = OPTIONS.filter(k => q['option_' + k]);
+  const useImages = !!oimg && keys.every(k => oimg[k]);
+
+  /* Variantlar — haqiqiy <button role="radio">.
+     Ilgari bu <div onclick> edi: sichqonchasiz o'quvchi javob bera olmasdi.
+     Barchasida tabindex="0" — Tab bilan ham, strelka bilan ham yuriladi.
+     Ba'zi maxsus qurilmalar faqat Tab va Enter yuboradi, shuning uchun
+     standart "roving tabindex" o'rniga hammasi fokuslanadigan qilindi. */
+  const opts = keys.map((k, i) => {
+    const on = answers[q.id] === k;
+    return `<button type="button" role="radio" tabindex="0"
+       class="option${on ? ' selected' : ''}" data-key="${k}"
+       aria-checked="${on ? 'true' : 'false'}">
+       <span class="option-letter" aria-hidden="true">${LABELS[k]}</span>
+       ${useImages
+         ? `<img class="option-img" src="${esc(oimg[k])}" alt="${LABELS[k]} varianti"/>`
+         : `<span class="option-text">${esc(q['option_' + k])}</span>`}
+       <span class="option-check" aria-hidden="true">✓</span>
+     </button>`;
+  }).join('');
+
+  return imgHtml +
+    `<div class="options${useImages ? ' img-options' : ''}" id="optionsContainer"
+          role="radiogroup" aria-labelledby="qText">${opts}</div>`;
+}
+
+function bindOptions(q) {
+  const els = [...document.querySelectorAll('#optionsContainer .option')];
+  els.forEach((el, i) => {
+    el.onclick = () => selectAnswer(q, el.dataset.key);
+    // Strelkalar bilan variantlar orasida yurish (radiogroup namunasi)
+    el.onkeydown = e => {
+      const step = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 }[e.key];
+      if (!step) return;
+      e.preventDefault();
+      els[(i + step + els.length) % els.length].focus();
+    };
+  });
+}
+
+function selectAnswer(q, key) {
+  answers[q.id] = key;
+  document.querySelectorAll('#optionsContainer .option').forEach(el => {
+    const on = el.dataset.key === key;
+    el.className = 'option' + (on ? ' selected' : '');
+    el.setAttribute('aria-checked', on ? 'true' : 'false');
+  });
+  announce(`${LABELS[key]} varianti tanlandi`);
+  updateDots();
+  maybeSubmitQuiz();
+  // To'g'ri javob ko'rsatilmaydi. Kechikish ekran o'qiguvchi
+  // tanlovni aytib berishga ulgurishi uchun.
+  setTimeout(() => advance(), 350);
+}
+
+/** Ekran o'qiguvchiga xabar beradi (topbardagi yashirin aria-live blok). */
+function announce(msg) {
+  const el = document.getElementById('srStatus');
+  if (el) el.textContent = msg;
+}
+
+/** Barcha test savollari javoblangach, natijani darrov yuboramiz —
+ *  o'quvchi ovozli bosqichlarda to'xtab qolsa ham ball yo'qolmaydi. */
+async function maybeSubmitQuiz(force) {
+  if (quizSubmitted) return;
+  const qSteps = steps.filter(s => s.kind === 'question');
+  if (!qSteps.length) return;
+  // force = yakunlash payti: javobsiz qolgan savollar bo'lsa ham yuboriladi
+  if (!force && qSteps.some(s => answers[s.data.id] === undefined)) return;
+
+  quizSubmitted = true;
+  try {
+    await fetch('/api/quiz/submit', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        user_id: user.id,
+        answers: qSteps.map(s => ({ question_id: s.data.id, selected_answer: answers[s.data.id] || null }))
+      })
+    });
+  } catch { quizSubmitted = false; }
+}
+
+// ── Diktant: ovoz → matn ────────────────────────────────────────────
+function dictationBody(t) {
+  const player = t.audio_url
+    ? `<audio controls preload="metadata" src="${esc(t.audio_url)}"
+              aria-label="Diktant yozuvi" style="width:100%;max-width:440px"
+              onplay="startElapsed()"></audio>`
+    : `<button class="btn btn-primary" id="playBtn" onclick="playDictation()">▶ Tinglash</button>
+       <button class="btn btn-ghost btn-sm" onclick="stopSpeak()">■ To'xtatish</button>`;
+  return `
+    <div class="t-label">1. Ovozni tinglang</div>
+    <div class="t-bar">
+      ${player}
+      <div class="t-elapsed"><small>Vaqt</small><span id="elapsedNum">00:00</span></div>
+    </div>
+    <label class="t-label" for="typeArea">2. Eshitganingizni yozing</label>
+    <textarea class="t-typearea" id="typeArea" spellcheck="false"
+              placeholder="Matnni shu yerga yozing..." oninput="startElapsed()"></textarea>
+    <p class="form-hint">Yozib bo'lgach <kbd class="kbd-dark">Ctrl</kbd> + <kbd class="kbd-dark">Enter</kbd>
+       bilan keyingi bosqichga o'tishingiz mumkin.</p>`;
+}
+
+function playDictation() {
+  const t = steps[currentIndex].data;
+  if (!t.text) return;
+  startElapsed();
+  const btn = document.getElementById('playBtn');
+  if (btn) { btn.disabled = true; btn.textContent = "O'qilmoqda..."; }
+  speak(t.text, () => { if (btn) { btn.disabled = false; btn.textContent = '▶ Qayta tinglash'; } });
+}
+
+// ── O'qish mashqi: matn → ovoz ──────────────────────────────────────
+function readingBody(t) {
+  return `
+    <div class="t-label">1. Matnni o'qing</div>
+    <div class="t-reading-text">${esc(t.text)}</div>
+    <div class="t-label">2. Ovoz chiqarib o'qing va yozib oling</div>
+    <div class="t-bar">
+      <button class="btn btn-danger" id="recBtn" onclick="toggleRec()">● Yozishni boshlash</button>
+      <div class="t-wave" id="wave" hidden aria-hidden="true">${'<i></i>'.repeat(16)}</div>
+      <div class="t-elapsed"><small>Vaqt</small><span id="elapsedNum">00:00</span></div>
+    </div>
+    <div id="recState" aria-live="polite"></div>`;
+}
+
+let recorder = null, recChunks = [], recStream = null;
+let audioCtx = null, analyser = null, rafId = null;
+let recordedBlob = null;
+
+async function toggleRec() {
+  const btn = document.getElementById('recBtn');
+  if (recorder) {
+    btn.disabled = true; btn.textContent = 'Yakunlanmoqda...';
+    const blob = await stopRecording();
+    btn.disabled = false;
+    if (!blob || blob.size < 1000) {
+      safeAlert("Yozuv juda qisqa chiqdi. Qaytadan urinib ko'ring.");
+      btn.textContent = '● Yozishni boshlash';
+      document.getElementById('recState').innerHTML = '';
+      return;
+    }
+    recordedBlob = blob;
+    btn.textContent = '● Qayta yozish';
+    document.getElementById('recState').innerHTML =
+      `<div class="alert alert-success" style="margin-top:12px">Yozuv tayyor — «Keyingi» tugmasini bosing</div>
+       <audio controls preload="metadata" src="${URL.createObjectURL(blob)}" style="width:100%;max-width:420px;margin-top:8px"></audio>`;
+    return;
+  }
+
+  try {
+    // Mikrofon ruxsati oynasi fokusni tortib oladi — nazoratni to'xtatamiz,
+    // aks holda ruxsat bergan o'quvchi bloklanib qolardi
+    pauseGuard(120000);
+    recStream = await navigator.mediaDevices.getUserMedia({
+      audio: { echoCancellation: true, noiseSuppression: true, channelCount: 1 }
+    });
+    pauseGuard(2000);
+  } catch {
+    pauseGuard(2000);
+    safeAlert('Mikrofonga ruxsat berilmadi. Brauzer sozlamalaridan ruxsat bering.');
+    return;
+  }
+
+  const cands = ['audio/webm;codecs=opus', 'audio/webm', 'audio/ogg;codecs=opus', 'audio/mp4'];
+  const mime = cands.find(m => window.MediaRecorder && MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(m));
+  const opts = { audioBitsPerSecond: 64000 };
+  if (mime) opts.mimeType = mime;
+
+  recorder = new MediaRecorder(recStream, opts);
+  recChunks = [];
+  recorder.ondataavailable = e => { if (e.data && e.data.size) recChunks.push(e.data); };
+  recorder.start();
+  startElapsed();
+  startWave();
+
+  btn.textContent = "■ To'xtatish";
+  document.getElementById('recState').innerHTML =
+    '<div style="display:flex;align-items:center;gap:8px;margin-top:10px;font-size:13px;color:#b91c1c">'
+    + '<span class="rec-dot"></span> Yozilmoqda...</div>';
+}
+
+function stopRecording() {
+  return new Promise(resolve => {
+    if (!recorder) return resolve(null);
+    recorder.onstop = () => {
+      const blob = recChunks.length ? new Blob(recChunks, { type: recorder.mimeType || 'audio/webm' }) : null;
+      if (recStream) { recStream.getTracks().forEach(t => t.stop()); recStream = null; }
+      stopWave();
+      recorder = null;
+      resolve(blob);
+    };
+    try { recorder.stop(); } catch { resolve(null); }
+  });
+}
+
+function startWave() {
+  const wave = document.getElementById('wave');
+  if (!wave) return;
+  wave.hidden = false;
+  const bars = wave.querySelectorAll('i');
+  try {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const src = audioCtx.createMediaStreamSource(recStream);
+    analyser = audioCtx.createAnalyser();
+    analyser.fftSize = 64;
+    src.connect(analyser);
+    const buf = new Uint8Array(analyser.frequencyBinCount);
+    const tick = () => {
+      if (!analyser) return;
+      analyser.getByteFrequencyData(buf);
+      bars.forEach((b, i) => {
+        b.style.height = Math.max(3, Math.round((buf[i % buf.length] / 255) * 22)) + 'px';
+      });
+      rafId = requestAnimationFrame(tick);
+    };
+    tick();
+  } catch {}
+}
+function stopWave() {
+  if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+  if (audioCtx) { try { audioCtx.close(); } catch {} audioCtx = null; }
+  analyser = null;
+  const w = document.getElementById('wave');
+  if (w) w.hidden = true;
+}
+
+// ── «Keyingi» — ovozli bosqichni yakunlaydi ─────────────────────────
+async function finishStep() {
+  await saveCurrentStep();
+  advance();
+}
+
+/** Ochiq turgan ovozli bosqichdagi ishni serverga yuboradi.
+ *  «Keyingi» tugmasi ham, nuqta bosilishi ham shuni chaqiradi —
+ *  shu tufayli bosqichlar orasida yurganda yozilgan narsa yo'qolmaydi. */
+async function saveCurrentStep() {
+  const s = steps[currentIndex];
+  if (!s || s.kind === 'question') return;
+
+  const btn = document.getElementById('btnNext');
+  btn.disabled = true;
+
+  try {
+    if (s.kind === 'dictation') {
+      const typed = (document.getElementById('typeArea').value || '').trim();
+      const elapsed = stopElapsed() || 1000;
+      if (typed) {
+        await fetch('/api/tasks/dictation', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ user_id: user.id, task_id: s.data.id, typed_text: typed, elapsed_ms: elapsed })
+        });
+        doneTasks[s.data.id] = true;
+      }
+    } else if (s.kind === 'reading') {
+      if (recorder) { recordedBlob = await stopRecording(); }
+      const elapsed = stopElapsed() || 1000;
+      if (recordedBlob && recordedBlob.size >= 1000) {
+        const fd = new FormData();
+        fd.append('audio', recordedBlob, 'reading.webm');
+        fd.append('user_id', user.id);
+        fd.append('task_id', s.data.id);
+        fd.append('elapsed_ms', elapsed);
+        await fetch('/api/tasks/reading', { method: 'POST', body: fd });
+        doneTasks[s.data.id] = true;
+      }
+    }
+  } catch {}
+
+  recordedBlob = null;
+  btn.disabled = false;
+}
+
+/** Keyingi bosqichga o'tadi. Oxirgi bosqichda test YAKUNLANMAYDI —
+ *  bajarilmagan birinchi bosqichga qaytaradi. Yakunlash faqat
+ *  «Testni yakunlash» tugmasi bilan bo'ladi. */
+function advance() {
+  stopSpeak();
+  if (currentIndex + 1 < steps.length) { showStep(currentIndex + 1); return; }
+
+  const i = nextUnfinished(currentIndex);
+  if (i >= 0) {
+    showStep(i);
+    announce('Bajarilmagan bosqichga qaytdik.');
+    return;
+  }
+  // Hammasi bajarilgan — oxirgi bosqichda qolamiz, «Keyingi» yashiriladi
+  showStep(currentIndex);
+}
+
+/** Oldingi bosqichga qaytish. Ochiq bosqichdagi ish saqlanadi. */
+function goBack() {
+  if (currentIndex === 0) return;
+  jumpTo(currentIndex - 1);
+}
+
+// ── Yakunlash ───────────────────────────────────────────────────────
+async function finishAll(byTimeout) {
+  if (quizFinished) return;
+  quizFinished = true;
+  stopTimer(); stopElapsed(); stopSpeak();
+  if (recorder) { try { recorder.stop(); } catch {} }
+
+  await maybeSubmitQuiz(true);
+  clearProgress();
+  localStorage.setItem('academyUser', JSON.stringify({ ...user, quiz_completed: true }));
+
+  if (byTimeout) {
+    document.querySelector('#resultsContent .result-message').textContent = 'Vaqt tugadi';
+    document.querySelector('#resultsContent .result-sub').innerHTML =
+      'Belgilangan 15 daqiqa tugadi.<br>Javoblaringiz saqlandi — natijalarni o‘qituvchi ko‘rib chiqadi.';
+  }
+
+  document.getElementById('quizContent').classList.add('hidden');
+  document.getElementById('progressWrap').classList.add('hidden');
+  document.getElementById('ruleNote').classList.add('hidden');
+  document.getElementById('resultsContent').classList.remove('hidden');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ── Klaviatura yorliqlari ───────────────────────────────────────────
+   Sichqonchasiz ishlash uchun. Matn maydonida raqamlar odatdagidek
+   yoziladi — u yerda faqat Ctrl+Enter ishlaydi. */
+document.addEventListener('keydown', e => {
+  if (quizFinished) return;
+  if (document.getElementById('lockOverlay').style.display === 'flex') return;
+  if (e.ctrlKey || e.metaKey || e.altKey) {
+    if (e.key === 'Enter' && !document.getElementById('btnNext').classList.contains('hidden')) {
+      e.preventDefault(); finishStep();
+    }
+    return;
+  }
+
+  const tag = (e.target.tagName || '').toLowerCase();
+  const typing = tag === 'textarea' || tag === 'input';
+
+  if (e.key === 'Enter' && !typing) {
+    const btn = document.getElementById('btnNext');
+    if (!btn.classList.contains('hidden') && !btn.disabled) { e.preventDefault(); finishStep(); }
+    return;
+  }
+  if (typing) return;
+
+  const s = steps[currentIndex];
+  if (!s || s.kind !== 'question') return;
+
+  // 1..5 yoki A..E bilan variantni tanlash
+  const keys = OPTIONS.filter(k => s.data['option_' + k]);
+  let key = null;
+  const n = parseInt(e.key, 10);
+  if (n >= 1 && n <= keys.length) key = keys[n - 1];
+  else if (/^[a-eA-E]$/.test(e.key)) {
+    const cand = e.key.toLowerCase();
+    if (keys.includes(cand)) key = cand;
+  }
+  if (key) { e.preventDefault(); selectAnswer(s.data, key); }
+});
+
+loadAll();
+</script>
+</body>
+</html>

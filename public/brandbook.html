@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Academy — Brand Book</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🎓%3C/text%3E%3C/svg%3E">
+<style>h1,h2,h3,h4,h5,h6,p,figure,blockquote{margin:0}</style>
+</head>
+<body>
+<style>
+/* ═══════════════════════════════════════════════════════════
+   BRAND TOKENLARI — style.css dan aynan koʻchirilgan.
+   Bular hech qachon oʻzgarmaydi: namunalar (canvas) shu
+   qiymatlar bilan chiziladi, mavzu (theme) ularga taʼsir qilmaydi.
+   ═══════════════════════════════════════════════════════════ */
+:root{
+  --b-primary:#111111;
+  --b-primary-dark:#000000;
+  --b-primary-light:#f0f0f0;
+  --b-success:#16a34a;  --b-success-light:#f0fdf4;
+  --b-error:#dc2626;    --b-error-light:#fef2f2;
+  --b-warning:#d97706;
+  --b-bg:#f5f5f5;
+  --b-card:#ffffff;
+  --b-text:#111111;
+  --b-text-muted:#6b7280;
+  --b-border:#e5e5e5;
+  --b-shadow:0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.05);
+  --b-shadow-lg:0 4px 12px rgba(0,0,0,.10), 0 2px 4px rgba(0,0,0,.06);
+  --b-font:'Segoe UI', system-ui, -apple-system, sans-serif;
+
+  /* Hujjatning oʻz chrome’i — mavzuga moslashadi */
+  --ground:#FCFCFC;
+  --surface:#FFFFFF;
+  --ink:#111111;
+  --ink-2:#5B5B5B;
+  --ink-3:#909090;
+  --rule:#E5E5E5;
+  --rule-2:#D4D4D4;
+  --chrome-accent:#111111;
+  --code-bg:#F4F4F4;
+
+  --mono:ui-monospace,"SF Mono","Cascadia Mono","Roboto Mono",Menlo,Consolas,monospace;
+}
+
+@media (prefers-color-scheme:dark){
+  :root{
+    --ground:#0D0D0D; --surface:#161616;
+    --ink:#F2F2F2; --ink-2:#A3A3A3; --ink-3:#767676;
+    --rule:#282828; --rule-2:#3A3A3A;
+    --chrome-accent:#FFFFFF;
+    --code-bg:#1F1F1F;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0D0D0D; --surface:#161616;
+  --ink:#F2F2F2; --ink-2:#A3A3A3; --ink-3:#767676;
+  --rule:#282828; --rule-2:#3A3A3A;
+  --chrome-accent:#FFFFFF;
+  --code-bg:#1F1F1F;
+}
+:root[data-theme="light"]{
+  --ground:#FCFCFC; --surface:#FFFFFF;
+  --ink:#111111; --ink-2:#5B5B5B; --ink-3:#909090;
+  --rule:#E5E5E5; --rule-2:#D4D4D4;
+  --chrome-accent:#111111;
+  --code-bg:#F4F4F4;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  background:var(--ground);
+  color:var(--ink);
+  font-family:var(--b-font);
+  font-size:15px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ── Karkas ─────────────────────────────────────────────── */
+.shell{display:grid;grid-template-columns:212px minmax(0,1fr);gap:48px;max-width:1180px;margin:0 auto;padding:0 28px}
+
+.sidenav{position:sticky;top:0;align-self:start;height:100vh;padding:40px 0;overflow-y:auto}
+.sidenav .mark{display:flex;align-items:center;gap:11px;margin-bottom:28px}
+.sidenav .mark .glyph{
+  width:38px;height:38px;border-radius:11px;background:var(--b-primary);
+  display:flex;align-items:center;justify-content:center;font-size:19px;flex:none;
+  box-shadow:0 4px 12px rgba(0,0,0,.2);
+}
+:root[data-theme="dark"] .sidenav .mark .glyph,
+:root:not([data-theme="light"]) .sidenav .mark .glyph{box-shadow:0 0 0 1px var(--rule-2)}
+.sidenav .mark b{font-size:15px;font-weight:800;letter-spacing:-.02em;line-height:1.1;display:block}
+.sidenav .mark span{font-size:11px;color:var(--ink-3);letter-spacing:.06em;text-transform:uppercase}
+.sidenav ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:1px}
+.sidenav a{
+  display:flex;gap:9px;padding:6px 9px;border-radius:7px;text-decoration:none;
+  color:var(--ink-2);font-size:13.5px;transition:background .15s,color .15s;
+}
+.sidenav a:hover{background:var(--code-bg);color:var(--ink)}
+.sidenav a.on{background:var(--chrome-accent);color:var(--ground)}
+.sidenav a i{font-family:var(--mono);font-style:normal;font-size:11px;opacity:.55;padding-top:2px}
+.sidenav a:focus-visible{outline:2px solid var(--chrome-accent);outline-offset:2px}
+
+main{padding:40px 0 100px;min-width:0}
+
+/* ── Muqova ─────────────────────────────────────────────── */
+.cover{padding:36px 0 44px;border-bottom:1px solid var(--rule);margin-bottom:56px}
+.kicker{
+  font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ink-3);margin:0 0 20px;
+}
+.cover h1{
+  font-size:clamp(2.4rem,7vw,4.4rem);font-weight:900;letter-spacing:-.038em;
+  line-height:.95;margin:0 0 20px;text-wrap:balance;
+}
+.cover p{margin:0;max-width:56ch;font-size:17px;color:var(--ink-2)}
+.cover-meta{
+  display:flex;gap:6px 32px;flex-wrap:wrap;margin-top:30px;
+  font-family:var(--mono);font-size:12px;color:var(--ink-3);
+}
+.cover-meta b{color:var(--ink-2);font-weight:400}
+
+/* ── Boʻlim ─────────────────────────────────────────────── */
+.sec{margin-bottom:76px;scroll-margin-top:28px}
+.sec-head{display:flex;align-items:baseline;gap:16px;margin-bottom:8px}
+.sec-num{font-family:var(--mono);font-size:13px;color:var(--ink-3);flex:none;padding-top:4px}
+.sec h2{font-size:30px;font-weight:800;letter-spacing:-.03em;margin:0;line-height:1.15}
+.sec-intro{margin:0 0 30px 45px;max-width:62ch;color:var(--ink-2)}
+@media (max-width:640px){.sec-intro{margin-left:0}}
+
+h3.sub{
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-3);font-weight:500;margin:38px 0 14px;
+  padding-bottom:8px;border-bottom:1px solid var(--rule);
+}
+
+.note{
+  margin:20px 0 0;padding:14px 16px;border-left:3px solid var(--chrome-accent);
+  background:var(--code-bg);font-size:13.5px;color:var(--ink-2);border-radius:0 6px 6px 0;
+}
+.note b{color:var(--ink)}
+.note.warn{border-left-color:var(--b-warning)}
+
+code,.tok{
+  font-family:var(--mono);font-size:.855em;
+  background:var(--code-bg);padding:2px 6px;border-radius:4px;color:var(--ink);
+}
+
+/* ── Rang kartalari ─────────────────────────────────────── */
+.swatches{display:grid;grid-template-columns:repeat(auto-fill,minmax(178px,1fr));gap:14px}
+.sw{border:1px solid var(--rule);border-radius:12px;overflow:hidden;background:var(--surface)}
+.sw .chipbox{height:88px;position:relative}
+.sw .chipbox::after{
+  content:attr(data-hex);position:absolute;left:12px;bottom:10px;
+  font-family:var(--mono);font-size:11px;letter-spacing:.04em;
+}
+.sw .meta{padding:11px 12px 13px;border-top:1px solid var(--rule)}
+.sw .meta .name{font-family:var(--mono);font-size:11.5px;color:var(--ink);display:block;margin-bottom:3px}
+.sw .meta .use{font-size:12px;color:var(--ink-3);line-height:1.45;display:block}
+
+/* ── Namunalar maydoni (brend sirti — mavzudan mustaqil) ── */
+.canvas{
+  background:var(--b-bg);border:1px solid var(--rule-2);border-radius:14px;
+  padding:28px;font-family:var(--b-font);color:var(--b-text);
+  position:relative;
+}
+.canvas::before{
+  content:"BREND SIRTI";position:absolute;top:0;right:14px;
+  transform:translateY(-50%);background:var(--ground);
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;color:var(--ink-3);
+  padding:0 8px;
+}
+.canvas.on-white{background:var(--b-card)}
+.canvas + .canvas{margin-top:14px}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.stack{display:flex;flex-direction:column;gap:12px}
+.specimen{display:grid;grid-template-columns:1fr;gap:8px}
+.spec-label{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink-3);
+}
+
+/* ══ Brend komponentlari — style.css dan aynan, .canvas ichida ══ */
+.canvas .btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:10px 20px;border-radius:10px;border:none;
+  font-size:15px;font-weight:600;cursor:pointer;transition:all .18s;
+  text-decoration:none;font-family:inherit;
+}
+.canvas .btn-primary{background:var(--b-primary);color:#fff}
+.canvas .btn-primary:hover{background:#333;transform:translateY(-1px);box-shadow:var(--b-shadow)}
+.canvas .btn-primary:active{transform:translateY(0);background:#000}
+.canvas .btn-success{background:var(--b-success);color:#fff}
+.canvas .btn-success:hover{background:#15803d}
+.canvas .btn-danger{background:var(--b-error);color:#fff}
+.canvas .btn-danger:hover{background:#b91c1c}
+.canvas .btn-outline{background:transparent;color:var(--b-primary);border:2px solid var(--b-primary)}
+.canvas .btn-outline:hover{background:var(--b-primary-light)}
+.canvas .btn-ghost{background:transparent;color:var(--b-text-muted)}
+.canvas .btn-ghost:hover{background:var(--b-border);color:var(--b-text)}
+.canvas .btn-sm{padding:6px 14px;font-size:13px;border-radius:8px}
+.canvas .btn-lg{padding:14px 28px;font-size:16px;border-radius:12px}
+.canvas .btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.canvas .btn-block{width:100%}
+
+.canvas .form-group{margin-bottom:18px}
+.canvas .form-group:last-child{margin-bottom:0}
+.canvas .form-label{display:block;margin-bottom:6px;font-weight:600;font-size:14px;color:var(--b-text)}
+.canvas .form-input{
+  width:100%;padding:12px 16px;border-radius:10px;
+  border:2px solid var(--b-border);font-size:15px;color:var(--b-text);
+  background:#fff;transition:border-color .18s,box-shadow .18s;outline:none;font-family:inherit;
+}
+.canvas .form-input:focus{border-color:#555;box-shadow:0 0 0 3px rgba(0,0,0,.07)}
+.canvas .form-input::placeholder{color:#b0b0b0}
+
+.canvas .card{background:var(--b-card);border-radius:16px;box-shadow:var(--b-shadow);padding:28px}
+
+.canvas .alert{
+  padding:12px 16px;border-radius:10px;font-size:14px;
+  font-weight:500;display:flex;align-items:center;gap:8px;
+}
+.canvas .alert-error{background:var(--b-error-light);color:#b91c1c}
+.canvas .alert-success{background:var(--b-success-light);color:#15803d}
+.canvas .alert-info{background:#f5f5f5;color:#333;border-left:3px solid #999}
+
+.canvas .badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:600}
+.canvas .badge-success{background:var(--b-success-light);color:#15803d}
+.canvas .badge-error{background:var(--b-error-light);color:#b91c1c}
+.canvas .badge-warning{background:#fef3c7;color:#92400e}
+.canvas .badge-primary{background:var(--b-primary-light);color:#333}
+
+.canvas .option{
+  display:flex;align-items:center;gap:14px;padding:14px 18px;border-radius:12px;
+  border:2px solid var(--b-border);cursor:pointer;transition:all .15s;background:#fff;
+}
+.canvas .option:hover{border-color:#555;background:#fafafa}
+.canvas .option.selected{border-color:#111;background:#f5f5f5}
+.canvas .option.correct{border-color:var(--b-success);background:var(--b-success-light)}
+.canvas .option.wrong{border-color:var(--b-error);background:var(--b-error-light)}
+.canvas .option-letter{
+  width:34px;height:34px;border-radius:50%;background:#eee;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:13px;flex-shrink:0;transition:all .15s;
+}
+.canvas .option.selected .option-letter{background:#111;color:#fff}
+.canvas .option.correct .option-letter{background:var(--b-success);color:#fff}
+.canvas .option.wrong .option-letter{background:var(--b-error);color:#fff}
+.canvas .option-text{font-size:15px;font-weight:500}
+
+.canvas .progress-bar-bg{height:6px;background:#e5e5e5;border-radius:99px;overflow:hidden}
+.canvas .progress-bar-fill{height:100%;background:#111;border-radius:99px;transition:width .4s ease}
+.canvas .progress-labels{display:flex;justify-content:space-between;font-size:12px;color:var(--b-text-muted);margin-top:5px}
+
+.canvas .q-number{font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px}
+.canvas .q-text{font-size:20px;font-weight:700;color:var(--b-text);line-height:1.5;margin-bottom:24px}
+.canvas .question-card{background:#fff;border-radius:18px;padding:36px;box-shadow:var(--b-shadow-lg);border:1px solid var(--b-border)}
+
+.canvas .result-hero{
+  background:#111;border-radius:20px;padding:40px 32px;text-align:center;color:#fff;
+  box-shadow:0 8px 30px rgba(0,0,0,.2);
+}
+.canvas .result-score-circle{
+  width:132px;height:132px;border-radius:50%;
+  background:rgba(255,255,255,.1);border:3px solid rgba(255,255,255,.3);
+  margin:0 auto 18px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+}
+.canvas .result-score-num{font-size:48px;font-weight:900;line-height:1}
+.canvas .result-score-total{font-size:16px;opacity:.65}
+.canvas .result-message{font-size:22px;font-weight:700;margin-bottom:8px}
+.canvas .result-sub{font-size:15px;opacity:.75}
+
+.canvas .spinner{
+  width:38px;height:38px;border:3px solid #e5e5e5;border-top-color:#111;
+  border-radius:50%;animation:bbspin .7s linear infinite;margin:0 auto;
+}
+@keyframes bbspin{to{transform:rotate(360deg)}}
+
+.canvas .empty-state{text-align:center;padding:34px 20px;color:var(--b-text-muted)}
+.canvas .empty-state .empty-icon{font-size:44px;margin-bottom:10px}
+
+.canvas .logo-icon{
+  width:72px;height:72px;background:#111;border-radius:20px;
+  display:flex;align-items:center;justify-content:center;font-size:32px;
+  box-shadow:0 8px 20px rgba(0,0,0,.2);
+}
+
+/* ── Tipografika namunasi ───────────────────────────────── */
+.typerow{
+  display:grid;grid-template-columns:104px minmax(0,1fr);gap:20px;align-items:baseline;
+  padding:13px 0;border-bottom:1px solid var(--rule);
+}
+.typerow:last-child{border-bottom:0}
+.typerow .m{font-family:var(--mono);font-size:11px;color:var(--ink-3);line-height:1.5;font-variant-numeric:tabular-nums}
+.typerow .s{color:var(--ink);min-width:0;overflow-wrap:anywhere}
+
+/* ── Radius / soya oʻlchagichlari ───────────────────────── */
+.radii{display:flex;gap:12px;flex-wrap:wrap}
+.rad{text-align:center}
+.rad .box{
+  width:74px;height:74px;background:var(--b-primary);
+  border:0;margin-bottom:7px;
+}
+.rad .m{font-family:var(--mono);font-size:10.5px;color:var(--ink-3);display:block;line-height:1.5}
+.rad .m b{color:var(--ink-2);font-weight:400;display:block}
+
+.shadows{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:16px}
+.shd{background:var(--b-card);border-radius:14px;padding:20px;border:1px solid var(--rule)}
+.shd .m{font-family:var(--mono);font-size:10.5px;color:#6b7280;line-height:1.55;overflow-wrap:anywhere;display:block;margin-top:12px}
+.shd .t{font-size:13px;font-weight:600;color:#111}
+
+/* ── Jadval ─────────────────────────────────────────────── */
+.tw{overflow-x:auto;border:1px solid var(--rule);border-radius:10px;margin-top:14px}
+table{border-collapse:collapse;width:100%;min-width:440px;font-size:13.5px}
+th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--ink-3);font-weight:500;background:var(--code-bg);white-space:nowrap;
+}
+tr:last-child td{border-bottom:0}
+td{font-variant-numeric:tabular-nums;color:var(--ink-2)}
+td:first-child{color:var(--ink)}
+td.ok{color:var(--b-success);font-weight:600}
+td.no{color:var(--b-error);font-weight:600}
+
+/* ── Yaxshi / yomon ─────────────────────────────────────── */
+.dd{display:grid;grid-template-columns:repeat(auto-fit,minmax(268px,1fr));gap:16px;margin-top:16px}
+.dd-col{border:1px solid var(--rule);border-radius:12px;overflow:hidden;background:var(--surface)}
+.dd-col h4{
+  margin:0;padding:11px 16px;font-size:12px;letter-spacing:.09em;text-transform:uppercase;
+  font-family:var(--mono);font-weight:500;border-bottom:1px solid var(--rule);
+}
+.dd-col.yes h4{color:var(--b-success);background:var(--b-success-light)}
+.dd-col.no  h4{color:var(--b-error);background:var(--b-error-light)}
+:root[data-theme="dark"] .dd-col.yes h4,
+:root:not([data-theme="light"]) .dd-col.yes h4{background:rgba(22,163,74,.12)}
+:root[data-theme="dark"] .dd-col.no h4,
+:root:not([data-theme="light"]) .dd-col.no h4{background:rgba(220,38,38,.12)}
+.dd-col ul{margin:0;padding:14px 16px 16px 32px;display:flex;flex-direction:column;gap:8px}
+.dd-col li{font-size:13.5px;color:var(--ink-2)}
+.dd-col li::marker{color:var(--ink-3)}
+
+/* ── Ohang namunalari ───────────────────────────────────── */
+.voice{display:grid;gap:10px}
+.vrow{
+  display:grid;grid-template-columns:132px minmax(0,1fr);gap:16px;
+  padding:12px 0;border-bottom:1px solid var(--rule);align-items:start;
+}
+.vrow:last-child{border-bottom:0}
+.vrow .k{font-family:var(--mono);font-size:11px;color:var(--ink-3);letter-spacing:.06em;text-transform:uppercase;padding-top:3px}
+.vrow .v{display:flex;flex-direction:column;gap:5px}
+.vrow .v em{font-style:normal;font-size:14.5px;color:var(--ink)}
+.vrow .v small{font-size:12.5px;color:var(--ink-3)}
+
+/* ── Kamchiliklar ───────────────────────────────────────── */
+.gap{display:flex;gap:15px;padding:16px 0;border-bottom:1px solid var(--rule)}
+.gap:last-child{border-bottom:0}
+.gap .n{font-family:var(--mono);font-size:12px;color:var(--b-warning);flex:none;width:2.2em;padding-top:3px}
+.gap .b p{margin:0 0 4px}
+.gap .b p:last-child{margin:0;font-size:12.5px;color:var(--ink-3);font-family:var(--mono)}
+
+footer{
+  border-top:1px solid var(--rule);margin-top:20px;padding:26px 0 0;
+  font-family:var(--mono);font-size:12px;color:var(--ink-3);
+  display:flex;gap:8px 26px;flex-wrap:wrap;
+}
+
+@media (max-width:900px){
+  .shell{grid-template-columns:1fr;gap:0}
+  .sidenav{position:static;height:auto;padding:26px 0 0}
+  .sidenav ol{flex-direction:row;flex-wrap:wrap;gap:5px}
+  .sidenav a{border:1px solid var(--rule)}
+  main{padding-top:26px}
+  .cover{padding-top:26px}
+}
+@media (max-width:640px){
+  .shell{padding:0 18px}
+  .canvas{padding:20px}
+  .canvas .question-card{padding:22px}
+  .typerow{grid-template-columns:1fr;gap:4px}
+  .vrow{grid-template-columns:1fr;gap:4px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms !important;transition-duration:.01ms !important}
+}
+</style>
+
+<div class="shell">
+
+  <nav class="sidenav">
+    <div class="mark">
+      <div class="glyph">🎓</div>
+      <div>
+        <b>AI Academy</b>
+        <span>Brand book</span>
+      </div>
+    </div>
+    <ol>
+      <li><a href="#s1"><i>01</i>Belgi</a></li>
+      <li><a href="#s2"><i>02</i>Ranglar</a></li>
+      <li><a href="#s3"><i>03</i>Tipografika</a></li>
+      <li><a href="#s4"><i>04</i>Shakl va soya</a></li>
+      <li><a href="#s5"><i>05</i>Komponentlar</a></li>
+      <li><a href="#s6"><i>06</i>Harakat</a></li>
+      <li><a href="#s7"><i>07</i>Til va ohang</a></li>
+      <li><a href="#s8"><i>08</i>Aniqlanmagan</a></li>
+    </ol>
+  </nav>
+
+  <main>
+
+    <header class="cover">
+      <p class="kicker">Vizual identifikatsiya qoʻllanmasi · v1.0</p>
+      <h1>AI Academy</h1>
+      <p>
+        Bu qoʻllanma oʻylab topilgan emas — ishlab turgan mahsulotning
+        <code>public/style.css</code> faylidan olingan. Har bir rang, oʻlcham va
+        komponent haqiqiy kodda mavjud boʻlgan qiymat.
+      </p>
+      <div class="cover-meta">
+        <span><b>Manba</b> D:\Projects\ai-academy\public\style.css</span>
+        <span><b>Shior</b> Bilimingizni sinab koʻring</span>
+        <span><b>Til</b> Oʻzbekcha (lotin)</span>
+      </div>
+    </header>
+
+    <!-- ═══ 01 ═══ -->
+    <section class="sec" id="s1">
+      <div class="sec-head"><span class="sec-num">01</span><h2>Belgi</h2></div>
+      <p class="sec-intro">
+        Belgi — qora kvadrat ichidagi bitta simvol. Rang yoʻq, gradient yoʻq, illyustratsiya yoʻq.
+        Butun brendning ogʻirligi shu qora blokda.
+      </p>
+
+      <div class="canvas on-white">
+        <div class="row" style="gap:44px;align-items:flex-end">
+          <div class="specimen" style="width:auto">
+            <div class="logo-icon">🎓</div>
+            <span class="spec-label">72 × 72 · r 20px</span>
+          </div>
+          <div class="specimen" style="width:auto">
+            <div class="logo-icon" style="width:48px;height:48px;border-radius:14px;font-size:22px;box-shadow:0 5px 13px rgba(0,0,0,.2)">🎓</div>
+            <span class="spec-label">48 × 48 · r 14px</span>
+          </div>
+          <div class="specimen" style="width:auto">
+            <div class="logo-icon" style="width:32px;height:32px;border-radius:9px;font-size:15px;box-shadow:0 3px 8px rgba(0,0,0,.2)">🎓</div>
+            <span class="spec-label">32 × 32 · r 9px</span>
+          </div>
+          <div class="specimen" style="width:auto">
+            <div style="text-align:center">
+              <div class="logo-icon" style="margin:0 auto 14px">🎓</div>
+              <div style="font-size:26px;font-weight:800;color:#111;line-height:1.1">AI Academy</div>
+              <div style="color:#6b7280;font-size:14px;margin-top:4px">Bilimingizni sinab koʻring</div>
+            </div>
+            <span class="spec-label" style="text-align:center">Toʻliq lokap — vertikal</span>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="sub">Qoidalar</h3>
+      <div class="dd">
+        <div class="dd-col yes">
+          <h4>Toʻgʻri</h4>
+          <ul>
+            <li>Radius kvadrat oʻlchamining ~28% ini tashkil qiladi — 72px da 20px, 48px da 14px.</li>
+            <li>Soya har doim pastga: <code>0 8px 20px rgba(0,0,0,.2)</code>.</li>
+            <li>Atrofdagi boʻsh joy belgi kengligining kamida yarmi.</li>
+            <li>Toʻliq lokapda nom 800 ogʻirlik, shior 14px <code>--text-muted</code>.</li>
+          </ul>
+        </div>
+        <div class="dd-col no">
+          <h4>Notoʻgʻri</h4>
+          <ul>
+            <li>Kvadratni boshqa rangga boʻyash — u faqat <code>#111111</code>.</li>
+            <li>Belgini choʻzish yoki aylantirish.</li>
+            <li>Rangli yoki suratli fon ustiga soyasiz qoʻyish.</li>
+            <li>Nom va belgini bir qatorga siqib, shiorni tashlab ketish.</li>
+          </ul>
+        </div>
+      </div>
+
+      <p class="note warn">
+        <b>Ochiq masala:</b> belgi hozircha 🎓 <b>emoji</b> — vektor fayl (SVG) yoʻq.
+        Yaʼni u har bir operatsion tizimda boshqacha koʻrinadi: Windows’da Segoe UI Emoji,
+        macOS’da Apple Color Emoji. Chop etish yoki katta oʻlcham uchun SVG chizilishi kerak.
+      </p>
+    </section>
+
+    <!-- ═══ 02 ═══ -->
+    <section class="sec" id="s2">
+      <div class="sec-head"><span class="sec-num">02</span><h2>Ranglar</h2></div>
+      <p class="sec-intro">
+        Palitra monoxrom: qora, oq va kulranglar. Rang faqat bitta vazifa uchun ishlatiladi —
+        <b>holatni bildirish</b>. Toʻgʻri javob yashil, xato qizil. Boshqa hech qayerda rang yoʻq.
+      </p>
+
+      <h3 class="sub">Asosiy</h3>
+      <div class="swatches">
+        <div class="sw"><div class="chipbox" style="background:#111111;color:#fff" data-hex="#111111"></div>
+          <div class="meta"><span class="name">--primary</span><span class="use">Tugmalar, sarlavhalar, progress, natija bloki. Brendning oʻzi.</span></div></div>
+        <div class="sw"><div class="chipbox" style="background:#000000;color:#fff" data-hex="#000000"></div>
+          <div class="meta"><span class="name">--primary-dark</span><span class="use">Faqat <code>:active</code> — tugma bosilgan lahza.</span></div></div>
+        <div class="sw"><div class="chipbox" style="background:#f0f0f0;color:#111" data-hex="#f0f0f0"></div>
+          <div class="meta"><span class="name">--primary-light</span><span class="use">Outline tugma hover foni, <code>.badge-primary</code>.</span></div></div>
+      </div>
+
+      <h3 class="sub">Semantik — faqat holat uchun</h3>
+      <div class="swatches">
+        <div class="sw"><div class="chipbox" style="background:#16a34a;color:#fff" data-hex="#16a34a"></div>
+          <div class="meta"><span class="name">--success</span><span class="use">Toʻgʻri javob, muvaffaqiyat tugmasi.</span></div></div>
+        <div class="sw"><div class="chipbox" style="background:#f0fdf4;color:#15803d" data-hex="#f0fdf4"></div>
+          <div class="meta"><span class="name">--success-light</span><span class="use">Yashil fon. Matn <code>#15803d</code> bilan juftlashadi.</span></div></div>
+        <div class="sw"><div class="chipbox" style="background:#dc2626;color:#fff" data-hex="#dc2626"></div>
+          <div class="meta"><span class="name">--error</span><span class="use">Xato javob, oʻchirish tugmasi.</span></div></div>
+        <div class="sw"><div class="chipbox" style="background:#fef2f2;color:#b91c1c" data-hex="#fef2f2"></div>
+          <div class="meta"><span class="name">--error-light</span><span class="use">Qizil fon. Matn <code>#b91c1c</code> bilan juftlashadi.</span></div></div>
+        <div class="sw"><div class="chipbox" style="background:#d97706;color:#fff" data-hex="#d97706"></div>
+          <div class="meta"><span class="name">--warning</span><span class="use">Eʼlon qilingan, lekin deyarli ishlatilmagan. <code>.badge-warning</code> oʻrniga <code>#fef3c7</code> / <code>#92400e</code> juftini ishlatadi.</span></div></div>
+      </div>
+
+      <h3 class="sub">Sirt va matn</h3>
+      <div class="swatches">
+        <div class="sw"><div class="chipbox" style="background:#f5f5f5;color:#111" data-hex="#f5f5f5"></div>
+          <div class="meta"><span class="name">--bg</span><span class="use">Sahifa foni. Kartochkalar shu fonda suzadi.</span></div></div>
+        <div class="sw"><div class="chipbox" style="background:#ffffff;color:#111;box-shadow:inset 0 0 0 1px #e5e5e5" data-hex="#ffffff"></div>
+          <div class="meta"><span class="name">--card</span><span class="use">Barcha kartochka, modal, input foni.</span></div></div>
+        <div class="sw"><div class="chipbox" style="background:#111111;color:#fff" data-hex="#111111"></div>
+          <div class="meta"><span class="name">--text</span><span class="use">Asosiy matn. <code>--primary</code> bilan bir xil qiymat.</span></div></div>
+        <div class="sw"><div class="chipbox" style="background:#6b7280;color:#fff" data-hex="#6b7280"></div>
+          <div class="meta"><span class="name">--text-muted</span><span class="use">Ikkilamchi matn, izoh, jadval sarlavhasi.</span></div></div>
+        <div class="sw"><div class="chipbox" style="background:#e5e5e5;color:#111" data-hex="#e5e5e5"></div>
+          <div class="meta"><span class="name">--border</span><span class="use">Barcha chegara va ajratuvchi chiziqlar.</span></div></div>
+      </div>
+
+      <h3 class="sub">Kontrast tekshiruvi (WCAG)</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Juftlik</th><th>Nisbat</th><th>Oddiy matn</th><th>Qayerda</th></tr></thead>
+          <tbody>
+            <tr><td>#111111 · #ffffff</td><td>18.9 : 1</td><td class="ok">AAA</td><td>Asosiy matn</td></tr>
+            <tr><td>#111111 · #f5f5f5</td><td>17.4 : 1</td><td class="ok">AAA</td><td>Fon ustidagi matn</td></tr>
+            <tr><td>#ffffff · #111111</td><td>18.9 : 1</td><td class="ok">AAA</td><td><code>.btn-primary</code></td></tr>
+            <tr><td>#6b7280 · #ffffff</td><td>4.83 : 1</td><td class="ok">AA</td><td><code>--text-muted</code> oq ustida</td></tr>
+            <tr><td>#6b7280 · #f5f5f5</td><td>4.43 : 1</td><td class="no">AA emas</td><td>Muted matn kulrang fonda</td></tr>
+            <tr><td>#ffffff · #dc2626</td><td>4.83 : 1</td><td class="ok">AA</td><td><code>.btn-danger</code></td></tr>
+            <tr><td>#ffffff · #16a34a</td><td>3.30 : 1</td><td class="no">AA emas</td><td><code>.btn-success</code></td></tr>
+            <tr><td>#ffffff · #d97706</td><td>3.19 : 1</td><td class="no">AA emas</td><td>Ogohlantirish fonida oq matn</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note warn">
+        <b>Ikkita muammo:</b> <code>.btn-success</code> — oq matn yashil ustida atigi <b>3.3 : 1</b>, bu 15px/600
+        matn uchun yetarli emas (AA 4.5 talab qiladi). Fonni <code>#15803d</code> ga tushirish muammoni hal qiladi.
+        Ikkinchisi — <code>--text-muted</code> kulrang fonda 4.43 gacha tushadi; kartochka ichida (oq fonda)
+        ishlatilsa muammo yoʻq.
+      </p>
+    </section>
+
+    <!-- ═══ 03 ═══ -->
+    <section class="sec" id="s3">
+      <div class="sec-head"><span class="sec-num">03</span><h2>Tipografika</h2></div>
+      <p class="sec-intro">
+        Bitta oila — tizim shrifti. Ierarxiya oʻlcham bilan emas, koʻproq <b>ogʻirlik</b> bilan quriladi:
+        500 dan 900 gacha. Mikro-yorliqlar bosh harflarda va harflar orasi kengaytirilgan.
+      </p>
+
+      <div class="note">
+        <b>Oila:</b> <code>'Segoe UI', system-ui, -apple-system, sans-serif</code> — Windows’da Segoe UI,
+        macOS’da San Francisco, Android’da Roboto. Brend qasddan tizim shriftida yashaydi: yuklanish
+        vaqti nol, har bir platformada oʻz uyida koʻrinadi.
+      </div>
+
+      <h3 class="sub">Shkala</h3>
+      <div class="canvas on-white">
+        <div class="typerow"><span class="m">48px · 900</span><span class="s" style="font-size:48px;font-weight:900;line-height:1">14</span></div>
+        <div class="typerow"><span class="m">26px · 800</span><span class="s" style="font-size:26px;font-weight:800">AI Academy</span></div>
+        <div class="typerow"><span class="m">22px · 700</span><span class="s" style="font-size:22px;font-weight:700">Ajoyib natija!</span></div>
+        <div class="typerow"><span class="m">20px · 700</span><span class="s" style="font-size:20px;font-weight:700;line-height:1.5">Sunʼiy intellekt qaysi sohada birinchi boʻlib qoʻllanilgan?</span></div>
+        <div class="typerow"><span class="m">18px · 800</span><span class="s" style="font-size:18px;font-weight:800">AI Academy</span></div>
+        <div class="typerow"><span class="m">17px · 700</span><span class="s" style="font-size:17px;font-weight:700">Savolni tahrirlash</span></div>
+        <div class="typerow"><span class="m">16px · 600</span><span class="s" style="font-size:16px;font-weight:600">Davom etish →</span></div>
+        <div class="typerow"><span class="m">15px · 600</span><span class="s" style="font-size:15px;font-weight:600">Roʻyxatdan oʻtish →</span></div>
+        <div class="typerow"><span class="m">15px · 500</span><span class="s" style="font-size:15px;font-weight:500">Mashina oʻqitish algoritmi</span></div>
+        <div class="typerow"><span class="m">14px · 600</span><span class="s" style="font-size:14px;font-weight:600">📱 Telefon raqam</span></div>
+        <div class="typerow"><span class="m">13px · 400</span><span class="s" style="font-size:13px;color:#6b7280">Sizning javobingiz: B — notoʻgʻri</span></div>
+        <div class="typerow"><span class="m">12px · 600</span><span class="s" style="font-size:12px;font-weight:600">Savol 7 / 14</span></div>
+        <div class="typerow"><span class="m">11px · 700<br>ls 1.5px</span><span class="s" style="font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:1.5px">Savol raqami</span></div>
+        <div class="typerow"><span class="m">11px · 700<br>ls 0.5px</span><span class="s" style="font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.5px">Jadval sarlavhasi</span></div>
+      </div>
+
+      <h3 class="sub">Ogʻirliklar qanday ishlaydi</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Ogʻirlik</th><th>Vazifasi</th><th>Misol</th></tr></thead>
+          <tbody>
+            <tr><td>500</td><td>Oddiy oʻqiladigan matn</td><td>Variant matni, ogohlantirish</td></tr>
+            <tr><td>600</td><td>Interaktiv yoki muhim</td><td>Tugma, forma yorligʻi, badge</td></tr>
+            <tr><td>700</td><td>Sarlavha va mikro-yorliq</td><td>Savol matni, modal sarlavhasi</td></tr>
+            <tr><td>800</td><td>Brend nomi</td><td>Logotip yozuvi, topbar</td></tr>
+            <tr><td>900</td><td>Yagona qahramon raqam</td><td>Natija bali — <code>14</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ═══ 04 ═══ -->
+    <section class="sec" id="s4">
+      <div class="sec-head"><span class="sec-num">04</span><h2>Shakl va soya</h2></div>
+      <p class="sec-intro">
+        Burchaklar hech qachon oʻtkir emas. Radius elementning oʻlchamiga qarab oʻsadi:
+        kichik tugma 8px, sahifani egallagan modal 24px. Qoida oddiy — <b>element qancha katta boʻlsa, radius shuncha yumshoq</b>.
+      </p>
+
+      <h3 class="sub">Radius zinapoyasi</h3>
+      <div class="radii">
+        <div class="rad"><div class="box" style="border-radius:7px"></div><span class="m"><b>7px</b>modal ✕</span></div>
+        <div class="rad"><div class="box" style="border-radius:8px"></div><span class="m"><b>8px</b>btn-sm</span></div>
+        <div class="rad"><div class="box" style="border-radius:10px"></div><span class="m"><b>10px</b>btn · input<br>alert</span></div>
+        <div class="rad"><div class="box" style="border-radius:12px"></div><span class="m"><b>12px</b>btn-lg<br>variant</span></div>
+        <div class="rad"><div class="box" style="border-radius:16px"></div><span class="m"><b>16px</b>card<br>jadval</span></div>
+        <div class="rad"><div class="box" style="border-radius:18px"></div><span class="m"><b>18px</b>savol<br>modal</span></div>
+        <div class="rad"><div class="box" style="border-radius:20px"></div><span class="m"><b>20px</b>belgi<br>natija</span></div>
+        <div class="rad"><div class="box" style="border-radius:24px"></div><span class="m"><b>24px</b>auth-box</span></div>
+        <div class="rad"><div class="box" style="border-radius:99px"></div><span class="m"><b>99px</b>progress<br>badge</span></div>
+        <div class="rad"><div class="box" style="border-radius:50%"></div><span class="m"><b>50%</b>harf<br>doira</span></div>
+      </div>
+
+      <h3 class="sub">Soyalar</h3>
+      <div class="shadows">
+        <div class="shd" style="box-shadow:0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.05)">
+          <span class="t">--shadow</span><span class="m">0 1px 3px rgba(0,0,0,.08),<br>0 1px 2px rgba(0,0,0,.05)</span></div>
+        <div class="shd" style="box-shadow:0 4px 12px rgba(0,0,0,.10), 0 2px 4px rgba(0,0,0,.06)">
+          <span class="t">--shadow-lg</span><span class="m">0 4px 12px rgba(0,0,0,.10),<br>0 2px 4px rgba(0,0,0,.06)</span></div>
+        <div class="shd" style="box-shadow:0 8px 20px rgba(0,0,0,.2)">
+          <span class="t">Belgi</span><span class="m">0 8px 20px rgba(0,0,0,.2)</span></div>
+        <div class="shd" style="box-shadow:0 8px 30px rgba(0,0,0,.2)">
+          <span class="t">Natija bloki</span><span class="m">0 8px 30px rgba(0,0,0,.2)</span></div>
+        <div class="shd" style="box-shadow:0 20px 50px rgba(0,0,0,.25)">
+          <span class="t">Modal</span><span class="m">0 20px 50px rgba(0,0,0,.25)</span></div>
+        <div class="shd" style="box-shadow:0 25px 60px rgba(0,0,0,.4)">
+          <span class="t">Kirish oynasi</span><span class="m">0 25px 60px rgba(0,0,0,.4)<br>— qora fon ustida</span></div>
+      </div>
+      <p class="note">
+        Soyalar ikki toifaga boʻlinadi: <b>tinch</b> (<code>--shadow</code>, <code>--shadow-lg</code>) — sahifadagi
+        kartochkalar uchun, va <b>dramatik</b> (20–25px blur, .25–.4 shaffoflik) — foydalanuvchini bir narsaga
+        majburan qaratadigan elementlar uchun: modal va kirish oynasi.
+      </p>
+    </section>
+
+    <!-- ═══ 05 ═══ -->
+    <section class="sec" id="s5">
+      <div class="sec-head"><span class="sec-num">05</span><h2>Komponentlar</h2></div>
+      <p class="sec-intro">
+        Quyidagi namunalar rasm emas — ular haqiqiy CSS bilan chizilgan. Ustiga sichqonchani olib boring,
+        bosing: mahsulotdagi bilan bir xil ishlaydi.
+      </p>
+
+      <h3 class="sub">Tugmalar</h3>
+      <div class="canvas">
+        <div class="stack">
+          <div class="row">
+            <button class="btn btn-primary">Davom etish →</button>
+            <button class="btn btn-success">Saqlash</button>
+            <button class="btn btn-danger">Oʻchirish</button>
+            <button class="btn btn-outline">Bekor qilish</button>
+            <button class="btn btn-ghost">← Orqaga</button>
+            <button class="btn btn-primary" disabled>Oʻchirilgan</button>
+          </div>
+          <div class="row">
+            <button class="btn btn-primary btn-sm">Kichik</button>
+            <button class="btn btn-primary">Oddiy</button>
+            <button class="btn btn-primary btn-lg">Katta</button>
+          </div>
+        </div>
+      </div>
+      <p class="note">
+        Asosiy tugma hover’da <b>1 piksel yuqoriga</b> koʻtariladi va soya oladi; bosilganda joyiga qaytib
+        toʻliq qoraga oʻtadi. Bu butun tizimdagi yagona «koʻtarilish» harakati — boshqa hech qayerda takrorlanmaydi.
+      </p>
+
+      <h3 class="sub">Forma</h3>
+      <div class="canvas">
+        <div class="card" style="max-width:420px">
+          <div class="form-group">
+            <label class="form-label">📱 Telefon raqam</label>
+            <input class="form-input" type="text" placeholder="901234567" style="letter-spacing:1px;font-size:17px;font-weight:600"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">👤 Ism va Familiya</label>
+            <input class="form-input" type="text" placeholder="Masalan: Alisher Nazarov"/>
+          </div>
+          <button class="btn btn-primary btn-block btn-lg">Roʻyxatdan oʻtish →</button>
+        </div>
+      </div>
+
+      <h3 class="sub">Xabar va nishon</h3>
+      <div class="canvas">
+        <div class="stack">
+          <div class="alert alert-error">Telefon raqam kiriting</div>
+          <div class="alert alert-success">🎉 Tabriklaymiz! Test muvaffaqiyatli topshirildi</div>
+          <div class="alert alert-info">Test boshlangandan keyin toʻxtatib boʻlmaydi</div>
+          <div class="row">
+            <span class="badge badge-success">Topshirgan</span>
+            <span class="badge badge-error">Yiqilgan</span>
+            <span class="badge badge-warning">Kutilmoqda</span>
+            <span class="badge badge-primary">Admin</span>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="sub">Javob variantlari — toʻrt holat</h3>
+      <div class="canvas">
+        <div class="stack" style="max-width:520px;gap:10px">
+          <div class="option"><div class="option-letter">A</div><div class="option-text">Tibbiyot sohasida</div></div>
+          <div class="option selected"><div class="option-letter">B</div><div class="option-text">Shaxmat oʻyinida — tanlangan</div></div>
+          <div class="option correct"><div class="option-letter">C</div><div class="option-text">Shaxmat oʻyinida — toʻgʻri</div></div>
+          <div class="option wrong"><div class="option-letter">D</div><div class="option-text">Kosmik tadqiqotda — xato</div></div>
+        </div>
+      </div>
+      <p class="note">
+        Harf doirasi holatni ikki marta kodlaydi: <b>chegara rangi</b> va <b>doira toʻldirilishi</b>.
+        Faqat rangga tayanmaydi — bu rang koʻrmaydigan foydalanuvchi uchun ham ishlaydi.
+      </p>
+
+      <h3 class="sub">Progress</h3>
+      <div class="canvas on-white">
+        <div style="max-width:520px">
+          <div class="progress-bar-bg"><div class="progress-bar-fill" id="pbar" style="width:50%"></div></div>
+          <div class="progress-labels"><span id="plab">Savol 7 / 14</span><span id="ppct">50%</span></div>
+        </div>
+      </div>
+
+      <h3 class="sub">Savol kartochkasi</h3>
+      <div class="canvas">
+        <div class="question-card" style="max-width:560px">
+          <div class="q-number">Savol 7 / 14</div>
+          <div class="q-text">Sunʼiy intellekt atamasi birinchi marta qachon ishlatilgan?</div>
+          <div class="stack" style="gap:10px">
+            <div class="option"><div class="option-letter">A</div><div class="option-text">1943-yil</div></div>
+            <div class="option selected"><div class="option-letter">B</div><div class="option-text">1956-yil</div></div>
+            <div class="option"><div class="option-letter">C</div><div class="option-text">1969-yil</div></div>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="sub">Natija bloki</h3>
+      <div class="canvas">
+        <div class="result-hero" style="max-width:520px;margin:0 auto">
+          <div class="result-score-circle">
+            <div class="result-score-num">12</div>
+            <div class="result-score-total">/ 14</div>
+          </div>
+          <div class="result-message">🎉 Ajoyib natija!</div>
+          <div class="result-sub">Siz 86% toʻgʻri javob berdingiz</div>
+        </div>
+      </div>
+
+      <h3 class="sub">Kutish va boʻshlik</h3>
+      <div class="canvas">
+        <div class="row" style="gap:56px;justify-content:center">
+          <div class="specimen" style="width:auto"><div class="spinner"></div><span class="spec-label" style="text-align:center">Spinner</span></div>
+          <div class="empty-state"><div class="empty-icon">📋</div><div>Hozircha savol qoʻshilmagan</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ 06 ═══ -->
+    <section class="sec" id="s6">
+      <div class="sec-head"><span class="sec-num">06</span><h2>Harakat</h2></div>
+      <p class="sec-intro">
+        Animatsiya kam va tez. Eng uzun oddiy oʻtish — 0.2 sekund. Yagona istisno: progress chizigʻi
+        0.4 sekundda suriladi, chunki u foydalanuvchining oldinga siljishini <b>koʻrsatishi</b> kerak.
+      </p>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Davomiylik</th><th>Egri chiziq</th><th>Qayerda</th></tr></thead>
+          <tbody>
+            <tr><td>0.15s</td><td>default</td><td>Variant, harf doirasi, modal yopish tugmasi</td></tr>
+            <tr><td>0.18s</td><td>default</td><td>Tugmalar, forma maydoni</td></tr>
+            <tr><td>0.2s</td><td>default</td><td>Modal ochilishi — <code>scale(.96) → scale(1)</code></td></tr>
+            <tr><td>0.4s</td><td>ease</td><td>Progress chizigʻi kengligi</td></tr>
+            <tr><td>0.7s</td><td>linear ∞</td><td>Spinner aylanishi</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">
+        Faqat ikkita transformatsiya mavjud: tugmaning <code>translateY(-1px)</code> koʻtarilishi
+        va modalning <code>scale(.96)</code> dan ochilishi. Boshqa hech narsa harakatlanmaydi —
+        siljish yoʻq, aylanish yoʻq, parallaks yoʻq.
+      </p>
+    </section>
+
+    <!-- ═══ 07 ═══ -->
+    <section class="sec" id="s7">
+      <div class="sec-head"><span class="sec-num">07</span><h2>Til va ohang</h2></div>
+      <p class="sec-intro">
+        Barcha matn oʻzbek tilida, lotin alifbosida. Ohang — xotirjam va toʻgʻridan-toʻgʻri.
+        Kechirim soʻralmaydi, ortiqcha xushmuomalalik yoʻq. Har bir yorliq foydalanuvchi
+        <b>nima boʻlishini</b> aniq aytadi.
+      </p>
+
+      <div class="voice">
+        <div class="vrow"><span class="k">Oldinga</span><span class="v">
+          <em>Davom etish →&nbsp;&nbsp;·&nbsp;&nbsp;Roʻyxatdan oʻtish →</em>
+          <small>Oldinga yuradigan tugma oxirida strelka. Fe’l harakat nomi bilan — «OK» yoki «Yuborish» emas.</small></span></div>
+        <div class="vrow"><span class="k">Orqaga</span><span class="v">
+          <em>← Orqaga&nbsp;&nbsp;·&nbsp;&nbsp;← Boshqa raqam bilan kirish</em>
+          <small>Strelka boshida. Qaytish yoʻli har doim ochiq qoldiriladi.</small></span></div>
+        <div class="vrow"><span class="k">Kutish</span><span class="v">
+          <em>Tekshirilmoqda…&nbsp;&nbsp;·&nbsp;&nbsp;Roʻyxatdan oʻtilmoqda…</em>
+          <small>Tugma matni jarayon nomiga almashadi. «Yuklanmoqda» kabi umumiy soʻz ishlatilmaydi.</small></span></div>
+        <div class="vrow"><span class="k">Xato</span><span class="v">
+          <em>Telefon raqam kiriting&nbsp;&nbsp;·&nbsp;&nbsp;Server bilan bogʻlanishda xatolik</em>
+          <small>Nima qilish kerakligi aytiladi. «Kechirasiz» yoʻq, xato kodi yoʻq, ayblov yoʻq.</small></span></div>
+        <div class="vrow"><span class="k">Muvaffaqiyat</span><span class="v">
+          <em>🎉 Tabriklaymiz!&nbsp;&nbsp;·&nbsp;&nbsp;📚 Test topshirilgan</em>
+          <small>Natija 70% dan yuqori boʻlsa — bayram. Past boʻlsa — betaraf qayd, hukm emas.</small></span></div>
+        <div class="vrow"><span class="k">Izoh</span><span class="v">
+          <em>Faqat 9 ta raqam kiriting (operator kodi bilan)</em>
+          <small>Maydon ostida 12px kulrang matn. Xato chiqishidan <b>oldin</b> tushuntiradi.</small></span></div>
+        <div class="vrow"><span class="k">Emoji</span><span class="v">
+          <em>📱 Telefon raqam&nbsp;&nbsp;·&nbsp;&nbsp;👤 Ism va Familiya&nbsp;&nbsp;·&nbsp;&nbsp;🎓 belgi</em>
+          <small>Emoji faqat forma yorligʻi boshida va holat xabarida. Sarlavhada, tugmada yoki oddiy matnda ishlatilmaydi.</small></span></div>
+      </div>
+
+      <div class="dd">
+        <div class="dd-col yes">
+          <h4>Shunday yozing</h4>
+          <ul>
+            <li>«Roʻyxatdan oʻtish →» — harakat aniq nomlangan.</li>
+            <li>«Ism va familiyangizni kiriting» — nima qilish kerakligi aytilgan.</li>
+            <li>«Siz bu testni allaqachon topshirgansiz» — fakt, qisqa.</li>
+          </ul>
+        </div>
+        <div class="dd-col no">
+          <h4>Bunday yozmang</h4>
+          <ul>
+            <li>«Yuborish» yoki «OK» — nima boʻlishi noaniq.</li>
+            <li>«Xatolik yuz berdi (code 500)» — foydalanuvchiga kod kerak emas.</li>
+            <li>«Kechirasiz, afsuski…» — ortiqcha uzr soʻrash.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ 08 ═══ -->
+    <section class="sec" id="s8">
+      <div class="sec-head"><span class="sec-num">08</span><h2>Aniqlanmagan</h2></div>
+      <p class="sec-intro">
+        Halol boʻlim: tizimda hozircha <b>yoʻq</b> narsalar. Bu qoʻllanma ularni yashirmaydi —
+        keyingi versiyada toʻldiriladigan roʻyxat.
+      </p>
+
+      <div class="gap"><span class="n">01</span><div class="b">
+        <p><b>Qorongʻi rejim yoʻq.</b> <code>style.css</code> da <code>prefers-color-scheme</code> umuman ishlatilmagan. Brend faqat yorugʻ sirtda yashaydi — shuning uchun bu qoʻllanmadagi namunalar ham har doim yorugʻ fonda chiziladi.</p>
+        <p>style.css — 293 qator, 0 ta media (color-scheme)</p></div></div>
+
+      <div class="gap"><span class="n">02</span><div class="b">
+        <p><b>Klaviatura fokusi aniqlanmagan.</b> Faqat <code>.form-input:focus</code> bor. Tugmalar, variantlar va modal yopish tugmasi uchun <code>:focus-visible</code> holati yoʻq — klaviatura bilan yuradigan foydalanuvchi qayerdaligini koʻrmaydi.</p>
+        <p>btn · option · modal-close — fokus uslubi yoʻq</p></div></div>
+
+      <div class="gap"><span class="n">03</span><div class="b">
+        <p><b>Belgi vektor emas.</b> 🎓 — emoji, SVG fayl mavjud emas. Har OS’da boshqacha chiziladi, chop etishga yaramaydi.</p>
+        <p>index.html:13 — <code>&lt;div class="logo-icon"&gt;🎓&lt;/div&gt;</code></p></div></div>
+
+      <div class="gap"><span class="n">04</span><div class="b">
+        <p><b>Boʻshliq shkalasi yoʻq.</b> Chekinishlar toʻgʻridan-toʻgʻri yozilgan: 6, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 32, 36, 48px. Radius va rang tokenlashtirilgan, boʻshliq — yoʻq.</p>
+        <p>Taklif: 4px qadamli shkala — 4 · 8 · 12 · 16 · 24 · 32 · 48</p></div></div>
+
+      <div class="gap"><span class="n">05</span><div class="b">
+        <p><b>Ikkita kontrast muammosi.</b> <code>.btn-success</code> (3.30 : 1) va ogohlantirish rangi ustidagi oq matn (3.19 : 1) WCAG AA dan past. 02-boʻlimdagi jadvalga qarang.</p>
+        <p>Yechim: yashil tugma foni <code>#16a34a</code> → <code>#15803d</code></p></div></div>
+    </section>
+
+    <footer>
+      <span>AI Academy brand book v1.0</span>
+      <span>Manba: public/style.css · index.html · quiz.html</span>
+    </footer>
+
+  </main>
+</div>
+
+<script>
+/* Progress namunasi — jonli, harakat qoidasini koʻrsatish uchun */
+(function(){
+  const bar = document.getElementById('pbar');
+  const lab = document.getElementById('plab');
+  const pct = document.getElementById('ppct');
+  if(!bar) return;
+  const steps = [4, 7, 9, 12, 14];
+  let i = 1;
+  setInterval(function(){
+    const q = steps[i % steps.length];
+    const p = Math.round(q / 14 * 100);
+    bar.style.width = p + '%';
+    lab.textContent = 'Savol ' + q + ' / 14';
+    pct.textContent = p + '%';
+    i++;
+  }, 2600);
+})();
+
+/* Yon menyuda faol boʻlim */
+(function(){
+  const links = Array.prototype.slice.call(document.querySelectorAll('.sidenav a'));
+  const secs  = links.map(function(a){ return document.querySelector(a.getAttribute('href')); });
+  if(!('IntersectionObserver' in window)) return;
+  const io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(!e.isIntersecting) return;
+      const idx = secs.indexOf(e.target);
+      links.forEach(function(a, j){ a.classList.toggle('on', j === idx); });
+    });
+  }, {rootMargin:'-10% 0px -75% 0px'});
+  secs.forEach(function(s){ if(s) io.observe(s); });
+})();
+</script>
+
+</body>
+</html>

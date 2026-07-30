@@ -1,0 +1,1322 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Academy — Admin Panel</title>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    body { background: var(--bg); }
+
+    /* ── Top header ── */
+    .admin-header {
+      background: var(--brand-800);
+      padding: 0 28px;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 60px; position: sticky; top: 0; z-index: 100;
+      box-shadow: 0 2px 12px rgba(10,70,41,.32);
+    }
+    .admin-header .logo { font-size: 19px; font-weight: 800; color: #fff; letter-spacing: -.3px; }
+    .admin-header .logo span { color: rgba(255,255,255,.5); }
+    .admin-header-right { display: flex; align-items: center; gap: 12px; }
+    .admin-badge {
+      background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.15);
+      border-radius: 999px; padding: 5px 14px; font-size: 13px; font-weight: 600;
+      color: rgba(255,255,255,.8); display: flex; align-items: center; gap: 6px;
+    }
+    .admin-badge .dot { width: 7px; height: 7px; background: #4ade80; border-radius: 50%; }
+    .btn-logout {
+      background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.18);
+      color: rgba(255,255,255,.8); padding: 6px 16px; border-radius: 8px; cursor: pointer;
+      font-size: 13px; font-weight: 600; transition: background .2s;
+    }
+    .btn-logout:hover { background: rgba(255,255,255,.16); }
+
+    /* ── Stats strip ── */
+    .stats-strip {
+      display: flex; gap: 10px; padding: 12px 24px;
+      background: #fff; border-bottom: 1px solid #e5e5e5; overflow-x: auto;
+    }
+    .stat-pill {
+      display: flex; align-items: center; gap: 8px;
+      background: #f5f5f5; border: 1px solid #e5e5e5; border-radius: 10px;
+      padding: 7px 16px; white-space: nowrap; flex-shrink: 0;
+    }
+    .stat-pill .sp-icon { font-size: 16px; }
+    .stat-pill .sp-val { font-size: 17px; font-weight: 800; color: var(--text); }
+    .stat-pill .sp-label { font-size: 12px; color: #888; }
+
+    /* ── Split layout ── */
+    .split-wrap {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 16px; padding: 16px 24px 24px;
+      min-height: calc(100vh - 108px);
+    }
+    @media (max-width: 900px) { .split-wrap { grid-template-columns: 1fr; } }
+
+    /* ── Panel ── */
+    .panel {
+      background: #fff; border-radius: 14px;
+      box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 2px 8px rgba(0,0,0,.04);
+      display: flex; flex-direction: column;
+      border: 1px solid #e5e5e5; overflow: hidden; min-height: 500px;
+    }
+    .panel-header {
+      padding: 14px 18px; border-bottom: 1px solid #ebebeb;
+      display: flex; align-items: center; justify-content: space-between;
+      background: #fafafa; flex-shrink: 0;
+    }
+    .panel-title {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 14px; font-weight: 700; color: var(--text);
+    }
+    .panel-title .ptag {
+      font-size: 11px; background: #ebebeb; color: #555;
+      padding: 2px 8px; border-radius: 20px; font-weight: 700;
+    }
+    .panel-body { flex: 1; overflow-y: auto; }
+
+    /* ── Questions list ── */
+    .q-item {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 13px 18px; border-bottom: 1px solid #f2f2f2; transition: background .12s;
+    }
+    .q-item:hover { background: #fafafa; }
+    .q-item:last-child { border-bottom: none; }
+    .q-num {
+      width: 26px; height: 26px; border-radius: 7px;
+      background: #ebebeb; color: #444; font-weight: 800; font-size: 12px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px;
+    }
+    .q-info { flex: 1; min-width: 0; }
+    .q-text  { font-size: 14px; font-weight: 600; color: var(--text); line-height: 1.4; margin-bottom: 5px; }
+    .q-answer-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      background: #f0fdf4; color: #15803d; padding: 2px 8px;
+      border-radius: 6px; font-size: 12px; font-weight: 600;
+    }
+    .q-actions { display: flex; gap: 6px; flex-shrink: 0; }
+    .btn-icon {
+      width: 28px; height: 28px; border-radius: 7px; border: none;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      font-size: 13px; transition: all .12s;
+    }
+    .btn-icon.edit { background: #f0f0f0; color: #444; }
+    .btn-icon.edit:hover { background: #ddd; color: var(--text); }
+    .btn-icon.del  { background: #fef2f2; color: #dc2626; }
+    .btn-icon.del:hover  { background: #fee2e2; }
+
+    /* ── Ovozli topshiriqlar paneli ── */
+    .tasks-wrap { padding: 0 24px 24px; }
+    .tasks-wrap .panel { min-height: 0; }
+    .task-form { padding: 16px 18px; border-bottom: 1px solid #ebebeb; background: #fafafa; }
+    .tf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 700px) { .tf-grid { grid-template-columns: 1fr; } }
+    .task-form .form-input { font-size: 14px; padding: 9px 12px; }
+    .task-form textarea.form-input { resize: vertical; line-height: 1.55; }
+    .tf-audio { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .tf-audio input[type=file] { font-size: 12.5px; }
+    .tf-hint { font-size: 12px; color: #999; }
+
+    .tk-row { display: flex; align-items: center; gap: 12px; padding: 12px 18px; border-bottom: 1px solid #f2f2f2; }
+    .tk-row:last-child { border-bottom: none; }
+    .tk-ico {
+      width: 34px; height: 34px; border-radius: 10px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center; font-size: 16px; background: #f0f0f0;
+    }
+    .tk-ico.reading { background: var(--brand-800); }
+    .tk-main { flex: 1; min-width: 0; }
+    .tk-title { font-size: 14px; font-weight: 600; color: var(--text); }
+    .tk-text {
+      font-size: 12.5px; color: #888; margin-top: 2px;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .tk-tags { display: flex; gap: 6px; align-items: center; flex-shrink: 0; }
+    .tk-tag { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 20px; background: #f0f0f0; color: #555; }
+    .tk-tag.audio { background: #f0fdf4; color: #15803d; }
+    .tk-tag.tts   { background: #fef3c7; color: #92400e; }
+
+    /* ── O'quvchi tafsilotida: ovozli topshiriq natijalari ── */
+    .tr-wrap { border-top: 1px solid #f0f0f0; background: #fcfcfc; }
+    .tr-head {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1px; color: #888; padding: 10px 16px 6px;
+    }
+    .tr-row { display: flex; gap: 10px; padding: 8px 16px 12px; }
+    .tr-row.undone { background: #fdfaf6; }
+    .tr-ico { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+    /* Bajargan / bajarmagan nishoni — matn bilan, faqat rangga tayanmaymiz */
+    .tr-badge {
+      flex-shrink: 0; margin-top: 1px; align-self: flex-start;
+      font-size: 10px; font-weight: 800; text-transform: uppercase;
+      letter-spacing: .4px; padding: 3px 8px; border-radius: 99px;
+      white-space: nowrap;
+    }
+    .tr-badge.ok   { background: var(--success-light); color: #0F5F2C; }
+    .tr-badge.miss { background: var(--warning-light); color: #92400E; }
+    .tr-main { flex: 1; min-width: 0; }
+    .tr-title { font-size: 13px; font-weight: 600; color: var(--text); }
+    .tr-meta { font-size: 12px; color: #64748b; margin-top: 2px; }
+    .tr-det { margin-top: 6px; }
+    .tr-det summary { font-size: 12px; color: #666; cursor: pointer; }
+    .tr-text {
+      background: #fff; border: 1px solid #eee; border-radius: 8px; padding: 8px 10px;
+      font-size: 12.5px; line-height: 1.6; margin-top: 6px; color: #333; white-space: pre-wrap;
+    }
+    .tr-text.ref { background: #f0fdf4; border-color: #dcfce7; }
+
+    /* ── Students toolbar: qidiruv + saralash ── */
+    .s-toolbar {
+      display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+      padding: 10px 18px; border-bottom: 1px solid #ebebeb;
+      background: #fff; flex-shrink: 0;
+    }
+    .s-search { position: relative; flex: 1; min-width: 168px; }
+    .s-search .ico {
+      position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+      font-size: 12px; opacity: .5; pointer-events: none;
+    }
+    .s-search input {
+      width: 100%; padding: 8px 30px; border-radius: 9px;
+      border: 2px solid #e5e5e5; font-size: 13px; color: var(--text);
+      font-family: inherit; outline: none;
+      transition: border-color .18s, box-shadow .18s;
+    }
+    .s-search input:focus { border-color: #555; box-shadow: 0 0 0 3px rgba(0,0,0,.07); }
+    .s-search input::placeholder { color: #b0b0b0; }
+    .s-clear {
+      position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+      width: 20px; height: 20px; border: none; border-radius: 5px;
+      background: #eee; color: #666; cursor: pointer; font-size: 11px; line-height: 1;
+    }
+    .s-clear:hover { background: #ddd; color: var(--text); }
+    .s-sort {
+      padding: 8px 10px; border-radius: 9px; border: 2px solid #e5e5e5;
+      font-size: 12.5px; font-weight: 600; color: var(--text); background: #fff;
+      font-family: inherit; cursor: pointer; outline: none;
+    }
+    .s-sort:focus { border-color: #555; }
+
+    /* ── Students list ── */
+    .s-rank {
+      width: 22px; flex-shrink: 0; text-align: center;
+      font-size: 12px; font-weight: 700; color: #b8b8b8;
+      font-variant-numeric: tabular-nums;
+    }
+    .s-rank.top { font-size: 15px; color: var(--text); }
+    .s-row mark { background: #fef08a; color: var(--text); padding: 0 1px; border-radius: 2px; }
+    .s-item { border-bottom: 1px solid #f2f2f2; }
+    .s-item:last-child { border-bottom: none; }
+    .s-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 11px 18px; cursor: pointer; transition: background .12s;
+    }
+    .s-row:hover { background: #fafafa; }
+    .s-avatar {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: #222; color: #fff; font-weight: 700; font-size: 14px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .s-name  { font-size: 14px; font-weight: 600; color: var(--text); }
+    .s-phone { font-size: 12px; color: #888; margin-top: 1px; }
+    .s-score { margin-left: auto; text-align: right; flex-shrink: 0; }
+    .s-score .score-big { font-size: 15px; font-weight: 800; }
+    .score-good { color: #16a34a; }
+    .score-mid  { color: #d97706; }
+    .score-bad  { color: #dc2626; }
+    .score-none { color: #aaa; font-size: 12px; }
+    .s-chevron { font-size: 11px; color: #bbb; transition: transform .2s; flex-shrink: 0; }
+    .s-chevron.open { transform: rotate(90deg); }
+
+    /* ── Student detail accordion ── */
+    .s-detail {
+      display: none; background: #f8f8f8;
+      border-top: 1px solid #ebebeb; padding: 12px 14px;
+    }
+    .s-detail.open { display: block; }
+    .sd-header {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 12px; background: #fff; border-radius: 10px; margin-bottom: 8px;
+      border: 1px solid #ebebeb;
+    }
+    .sd-score { font-size: 22px; font-weight: 900; }
+    .sd-info  { font-size: 12px; color: #888; }
+    .sd-row {
+      display: flex; align-items: flex-start; gap: 8px;
+      padding: 7px 10px; border-radius: 8px; margin-bottom: 4px; font-size: 13px;
+    }
+    .sd-row.ok { background: #f0fdf4; }
+    .sd-row.ng { background: #fef2f2; }
+    .sd-row .sd-icon { flex-shrink: 0; font-size: 14px; margin-top: 1px; }
+    .sd-row .sd-qtext { font-weight: 600; color: var(--text); margin-bottom: 2px; }
+    .sd-row .sd-ans   { color: #666; }
+    .sd-row .sd-ans .correct { color: #16a34a; font-weight: 600; }
+    .sd-row .sd-ans .wrong   { color: #dc2626; }
+
+    /* ── Empty state ── */
+    .panel-empty {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      height: 100%; min-height: 200px; color: #bbb; gap: 8px; padding: 40px;
+    }
+    .panel-empty .ei { font-size: 36px; }
+
+    /* ── Inline add/edit form ── */
+    .q-form-wrap {
+      padding: 14px 18px; border-bottom: 2px solid #ebebeb;
+      background: #fafafa; display: none;
+    }
+    .q-form-wrap.open { display: block; }
+    .q-form-wrap h4 { font-size: 13px; font-weight: 700; margin-bottom: 10px; color: #333; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .form-group-sm { margin-bottom: 8px; }
+    .form-group-sm label {
+      display: block; font-size: 11px; font-weight: 600; color: #888; margin-bottom: 3px;
+    }
+    .form-input-sm {
+      width: 100%; padding: 7px 10px; border: 1.5px solid #e5e5e5; border-radius: 7px;
+      font-size: 13px; outline: none; transition: border-color .15s; background: #fff;
+    }
+    .form-input-sm:focus { border-color: #555; }
+    textarea.form-input-sm { resize: vertical; min-height: 56px; }
+    .form-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 10px; }
+
+    /* ── Inline spinner ── */
+    .panel-loading {
+      display: flex; align-items: center; justify-content: center;
+      padding: 50px 20px; color: #aaa; font-size: 13px;
+    }
+    .spin-sm {
+      width: 20px; height: 20px; border: 2.5px solid #e5e5e5;
+      border-top-color: #333; border-radius: 50%;
+      animation: spin .7s linear infinite; margin-right: 8px;
+    }
+
+    /* ── Pending badge ── */
+    .badge-pending {
+      display: inline-flex; align-items: center; gap: 4px;
+      background: #fef3c7; color: #92400e; padding: 2px 8px;
+      border-radius: 6px; font-size: 11px; font-weight: 600;
+    }
+
+    /* ── Time badge on question ── */
+    .q-time-badge {
+      display: inline-flex; align-items: center; gap: 3px;
+      background: #f5f5f5; color: #555; padding: 2px 7px;
+      border-radius: 6px; font-size: 11px; font-weight: 700;
+      margin-left: 6px;
+    }
+
+    /* ── Image upload area ── */
+    .img-upload-area {
+      border: 2px dashed #ddd; border-radius: 10px;
+      min-height: 72px; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: all .15s; background: #fafafa; overflow: hidden;
+    }
+    .img-upload-area:hover { border-color: #888; background: #f5f5f5; }
+    .img-upload-area.has-img { border-style: solid; padding: 4px; }
+    .img-upload-area img { max-height: 120px; max-width: 100%; border-radius: 7px; object-fit: contain; display: block; }
+    .img-placeholder { font-size: 12px; color: #aaa; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+    .img-placeholder .pi { font-size: 22px; }
+    .img-actions { display: flex; gap: 6px; align-items: center; margin-top: 5px; }
+
+    /* ── Q thumbnail in list ── */
+    .q-thumb { width: 44px; height: 36px; border-radius: 6px; object-fit: cover; flex-shrink: 0; border: 1px solid #ebebeb; }
+
+    /* ── Total time bar ── */
+    .total-time-bar {
+      padding: 7px 18px; background: #fafafa;
+      border-bottom: 1px solid #ebebeb;
+      font-size: 12px; color: #555; display: flex; align-items: center; gap: 6px;
+    }
+    .total-time-bar strong { color: var(--text); }
+  </style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="admin-header">
+  <div class="logo" style="display:flex;align-items:center;gap:10px">
+    <img src="/assets/mark-white.png" alt="" style="width:28px;height:auto;display:block"/>
+    <span>AI<span style="color:rgba(255,255,255,.5)"> Academy</span> Admin</span>
+  </div>
+  <div class="admin-header-right">
+    <div class="admin-badge">
+      <span class="dot"></span>
+      <span id="headerAdminName">Admin</span>
+    </div>
+    <button class="btn-logout" onclick="logout()">Chiqish</button>
+  </div>
+</header>
+
+<!-- Stats strip -->
+<div class="stats-strip">
+  <div class="stat-pill">
+    <span class="sp-icon">👥</span>
+    <span class="sp-val" id="statTotal">—</span>
+    <span class="sp-label">Jami o'quvchi</span>
+  </div>
+  <div class="stat-pill">
+    <span class="sp-icon">✅</span>
+    <span class="sp-val" id="statDone">—</span>
+    <span class="sp-label">Test topshirdi</span>
+  </div>
+  <div class="stat-pill">
+    <span class="sp-icon">⏳</span>
+    <span class="sp-val" id="statWait">—</span>
+    <span class="sp-label">Topshirmadi</span>
+  </div>
+  <div class="stat-pill">
+    <span class="sp-icon">📊</span>
+    <span class="sp-val" id="statAvg">—</span>
+    <span class="sp-label">O'rtacha ball</span>
+  </div>
+  <div class="stat-pill">
+    <span class="sp-icon">❓</span>
+    <span class="sp-val" id="statQCount">—</span>
+    <span class="sp-label">Savollar soni</span>
+  </div>
+</div>
+
+<!-- 2-panel split -->
+<div class="split-wrap">
+
+  <!-- LEFT: Questions panel -->
+  <div class="panel">
+    <div class="panel-header">
+      <div class="panel-title">
+        📋 Test Savollari
+        <span class="ptag" id="qPanelTag">0 ta</span>
+      </div>
+      <button class="btn btn-primary btn-sm" id="btnToggleForm" onclick="toggleAddForm()">+ Yangi savol</button>
+    </div>
+
+    <!-- Total time bar -->
+    <div class="total-time-bar" id="totalTimeBar">
+      ⏱ Umumiy vaqt: <strong id="totalTimeLabel">—</strong>
+    </div>
+
+    <!-- Inline add/edit form -->
+    <div class="q-form-wrap" id="qFormWrap">
+      <h4 id="qFormTitle">➕ Yangi savol qo'shish</h4>
+      <div id="qFormErr"></div>
+      <input type="hidden" id="qEditId"/>
+      <div class="form-group-sm">
+        <label>Savol matni</label>
+        <textarea id="qText" class="form-input-sm" rows="2" placeholder="Savolni kiriting..."></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group-sm">
+          <label>A varianti</label>
+          <input id="qOptA" class="form-input-sm" type="text" placeholder="A variant"/>
+        </div>
+        <div class="form-group-sm">
+          <label>B varianti</label>
+          <input id="qOptB" class="form-input-sm" type="text" placeholder="B variant"/>
+        </div>
+        <div class="form-group-sm">
+          <label>C varianti</label>
+          <input id="qOptC" class="form-input-sm" type="text" placeholder="C variant"/>
+        </div>
+        <div class="form-group-sm">
+          <label>D varianti</label>
+          <input id="qOptD" class="form-input-sm" type="text" placeholder="D variant"/>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group-sm" style="flex:1">
+          <label>E varianti <span style="color:#aaa;font-weight:400">— ixtiyoriy</span></label>
+          <input id="qOptE" class="form-input-sm" type="text" placeholder="Bo'sh qoldirilsa, savol 4 variantli bo'ladi"/>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group-sm">
+          <label>To'g'ri javob</label>
+          <select id="qCorrect" class="form-input-sm">
+            <option value="">— Tanlang —</option>
+            <option value="a">A</option>
+            <option value="b">B</option>
+            <option value="c">C</option>
+            <option value="d">D</option>
+            <option value="e">E</option>
+          </select>
+        </div>
+        <div class="form-group-sm">
+          <label>⏱ Vaqt (soniya)</label>
+          <input id="qTime" class="form-input-sm" type="number" min="5" max="300" placeholder="30" value="30"/>
+        </div>
+      </div>
+      <div class="form-group-sm">
+        <label>📷 Rasmlar (ixtiyoriy, maksimal 5 ta)</label>
+        <div id="imgUploadsContainer" style="display:flex;flex-wrap:wrap;gap:6px;min-height:0;margin-bottom:6px"></div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <button type="button" id="imgAddBtn" class="btn btn-ghost btn-sm" style="font-size:12px;padding:5px 12px" onclick="document.getElementById('imgFileInput').click()">+ Rasm qo'shish</button>
+          <span id="imgUploadStatus" style="font-size:11px;color:#888"></span>
+        </div>
+        <input type="file" id="imgFileInput" accept="image/*" style="display:none" onchange="handleImageSelect(this)"/>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-ghost btn-sm" onclick="cancelForm()">Bekor</button>
+        <button class="btn btn-primary btn-sm" id="qSaveBtn" onclick="saveQuestion()">✓ Saqlash</button>
+      </div>
+    </div>
+
+    <div class="panel-body" id="qPanelBody">
+      <div class="panel-loading"><div class="spin-sm"></div> Yuklanmoqda...</div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Students panel -->
+  <div class="panel">
+    <div class="panel-header">
+      <div class="panel-title">
+        👥 O'quvchilar Natijalari
+        <span class="ptag" id="sPanelTag">0 ta</span>
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="loadStudents()">↻ Yangilash</button>
+    </div>
+    <div class="s-toolbar">
+      <div class="s-search">
+        <span class="ico">🔍</span>
+        <input id="sSearch" type="text" autocomplete="off" oninput="applyStudentView()"
+               placeholder="Familiya, ism yoki telefon bo'yicha qidirish..."/>
+        <button class="s-clear" id="sClear" onclick="clearStudentSearch()" title="Tozalash" hidden>✕</button>
+      </div>
+      <select id="sSort" class="s-sort" onchange="applyStudentView()">
+        <option value="score-desc">Ball ↓ yuqoridan pastga</option>
+        <option value="score-asc">Ball ↑ pastdan yuqoriga</option>
+        <option value="name-asc">Ism / familiya A → Z</option>
+        <option value="recent">Ro'yxatdan o'tgani</option>
+      </select>
+    </div>
+    <div class="panel-body" id="sPanelBody">
+      <div class="panel-loading"><div class="spin-sm"></div> Yuklanmoqda...</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Ovozli topshiriqlar: diktant (ovoz → matn) va o'qish (matn → ovoz) -->
+<div class="tasks-wrap">
+  <div class="panel">
+    <div class="panel-header">
+      <div class="panel-title">
+        🎧 Ovozli topshiriqlar
+        <span class="ptag" id="tPanelTag">0 ta</span>
+      </div>
+      <button class="btn btn-primary btn-sm" id="btnToggleTaskForm" onclick="toggleTaskForm()">+ Yangi topshiriq</button>
+    </div>
+
+    <div class="task-form" id="taskForm" hidden>
+      <div class="tf-grid">
+        <div class="form-group">
+          <label class="form-label">Turi</label>
+          <select class="form-input" id="tfType" onchange="onTaskTypeChange()">
+            <option value="dictation">🎧 Diktant — ovoz eshitib matn yoziladi</option>
+            <option value="reading">🎙️ O'qish — matn ovoz chiqarib o'qiladi</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Sarlavha</label>
+          <input class="form-input" id="tfTitle" placeholder="Masalan: Diktant 4 — Neyron tarmoqlar"/>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" id="tfTextLabel">Matn — diktantda bu to'g'ri javob hisoblanadi</label>
+        <textarea class="form-input" id="tfText" rows="3" placeholder="Matnni kiriting..."></textarea>
+      </div>
+
+      <div class="form-group" id="tfAudioRow">
+        <label class="form-label">Tayyor audio (ixtiyoriy)</label>
+        <div class="tf-audio">
+          <input type="file" id="tfAudio" accept="audio/*" onchange="uploadTaskAudio()"/>
+          <span class="tf-hint" id="tfAudioState">Yuklanmasa — matn brauzer ovozi bilan o'qiladi</span>
+        </div>
+        <audio id="tfAudioPreview" controls preload="none" hidden style="width:100%;max-width:340px;margin-top:8px"></audio>
+      </div>
+
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-primary" id="tfSave" onclick="saveTask()">Saqlash</button>
+        <button class="btn btn-ghost" onclick="cancelTaskForm()">Bekor qilish</button>
+      </div>
+    </div>
+
+    <div class="panel-body" id="tPanelBody">
+      <div class="panel-loading"><div class="spin-sm"></div> Yuklanmoqda...</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const admin = JSON.parse(localStorage.getItem('academyUser') || 'null');
+if (!admin || !admin.is_admin) window.location.href = '/';
+
+document.getElementById('headerAdminName').textContent = admin.name;
+
+const LABELS = { a: 'A', b: 'B', c: 'C', d: 'D', e: 'E' };
+let editingId = null;
+let openStudentId = null;
+
+function logout() {
+  localStorage.removeItem('academyUser');
+  window.location.href = '/';
+}
+
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+}
+
+// ── Questions panel ────────────────────────────────────────────────
+
+async function loadQuestions() {
+  const body = document.getElementById('qPanelBody');
+  body.innerHTML = '<div class="panel-loading"><div class="spin-sm"></div> Yuklanmoqda...</div>';
+  try {
+    const res = await fetch(`/api/admin/questions?admin_id=${admin.id}`);
+    const questions = await res.json();
+    document.getElementById('qPanelTag').textContent = questions.length + ' ta';
+    document.getElementById('statQCount').textContent = questions.length;
+    renderQuestions(body, questions);
+  } catch {
+    body.innerHTML = '<div class="panel-loading" style="color:#ef4444">Yuklanmadi. Qayta urinib ko\'ring.</div>';
+  }
+}
+
+function formatTime(totalSeconds) {
+  if (!totalSeconds) return '—';
+  const m = Math.floor(totalSeconds / 60);
+  const s = totalSeconds % 60;
+  if (m === 0) return `${s} soniya`;
+  if (s === 0) return `${m} daqiqa`;
+  return `${m} daqiqa ${s} soniya`;
+}
+
+function renderQuestions(body, questions) {
+  if (!questions.length) {
+    body.innerHTML = '<div class="panel-empty"><div class="ei">📝</div><span>Hali savol qo\'shilmagan</span></div>';
+    document.getElementById('totalTimeLabel').textContent = '0 soniya';
+    return;
+  }
+  const totalSec = questions.reduce((s, q) => s + (q.time_seconds || 30), 0);
+  document.getElementById('totalTimeLabel').textContent = formatTime(totalSec);
+
+  body.innerHTML = questions.map((q, i) => {
+    const corrText = LABELS[q.correct_answer] + ') ' + esc(q['option_' + q.correct_answer]);
+    const timeSec = q.time_seconds || 30;
+    const imgUrls = Array.isArray(q.image_urls) ? q.image_urls : (q.image_url ? [q.image_url] : []);
+    const thumbHtml = imgUrls.map(u => `<img class="q-thumb" src="${esc(u)}" alt="rasm"/>`).join('');
+    return `<div class="q-item">
+      <div class="q-num">${i + 1}</div>
+      ${thumbHtml}
+      <div class="q-info">
+        <div class="q-text">${esc(q.question_text)}</div>
+        <div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap;margin-top:4px">
+          <span class="q-answer-badge">✓ ${esc(corrText)}</span>
+          <span class="q-time-badge">⏱ ${timeSec}s</span>
+        </div>
+      </div>
+      <div class="q-actions">
+        <button class="btn-icon edit" title="Tahrirlash" onclick="editQuestion(${q.id})">✏️</button>
+        <button class="btn-icon del" title="O'chirish" onclick="deleteQuestion(${q.id}, '${esc(q.question_text.slice(0,40))}')">🗑</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleAddForm() {
+  editingId = null;
+  const wrap = document.getElementById('qFormWrap');
+  const isOpen = wrap.classList.contains('open');
+  if (isOpen) {
+    cancelForm();
+  } else {
+    document.getElementById('qFormTitle').textContent = '➕ Yangi savol qo\'shish';
+    document.getElementById('qEditId').value = '';
+    document.getElementById('qText').value = '';
+    document.getElementById('qOptA').value = '';
+    document.getElementById('qOptB').value = '';
+    document.getElementById('qOptC').value = '';
+    document.getElementById('qOptD').value = '';
+    document.getElementById('qOptE').value = '';
+    document.getElementById('qCorrect').value = '';
+    document.getElementById('qTime').value = '30';
+    document.getElementById('qFormErr').innerHTML = '';
+    resetImageField();
+    wrap.classList.add('open');
+    document.getElementById('btnToggleForm').textContent = '✕ Yopish';
+    document.getElementById('qText').focus();
+  }
+}
+
+async function editQuestion(id) {
+  editingId = id;
+  try {
+    const res = await fetch(`/api/admin/questions?admin_id=${admin.id}`);
+    const questions = await res.json();
+    const q = questions.find(x => x.id === id);
+    if (!q) return;
+    document.getElementById('qFormTitle').textContent = '✏️ Savolni tahrirlash';
+    document.getElementById('qEditId').value = id;
+    document.getElementById('qText').value = q.question_text;
+    document.getElementById('qOptA').value = q.option_a;
+    document.getElementById('qOptB').value = q.option_b;
+    document.getElementById('qOptC').value = q.option_c;
+    document.getElementById('qOptD').value = q.option_d;
+    document.getElementById('qOptE').value = q.option_e || '';
+    document.getElementById('qCorrect').value = q.correct_answer;
+    document.getElementById('qTime').value = q.time_seconds || 30;
+    document.getElementById('qFormErr').innerHTML = '';
+    currentImageUrls = Array.isArray(q.image_urls) ? [...q.image_urls]
+      : (q.image_url ? [q.image_url] : []);
+    renderImageUploads();
+    document.getElementById('qFormWrap').classList.add('open');
+    document.getElementById('btnToggleForm').textContent = '✕ Yopish';
+    document.getElementById('qFormWrap').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  } catch {}
+}
+
+function cancelForm() {
+  editingId = null;
+  document.getElementById('qFormWrap').classList.remove('open');
+  document.getElementById('btnToggleForm').textContent = '+ Yangi savol';
+  resetImageField();
+}
+
+let currentImageUrls = [];
+
+function renderImageUploads() {
+  const container = document.getElementById('imgUploadsContainer');
+  container.innerHTML = '';
+  currentImageUrls.forEach((url, i) => {
+    const div = document.createElement('div');
+    div.style.cssText = 'position:relative;display:inline-block';
+    div.innerHTML = `
+      <img src="${url}" style="width:80px;height:64px;object-fit:cover;border-radius:8px;border:1px solid #e5e5e5;display:block"/>
+      <button type="button" onclick="removeImageAt(${i})" style="
+        position:absolute;top:-6px;right:-6px;width:20px;height:20px;
+        background:#dc2626;color:#fff;border:none;border-radius:50%;
+        font-size:11px;cursor:pointer;padding:0;line-height:20px;text-align:center">✕</button>`;
+    container.appendChild(div);
+  });
+  document.getElementById('imgAddBtn').style.display = currentImageUrls.length >= 5 ? 'none' : '';
+}
+
+function removeImageAt(i) {
+  currentImageUrls.splice(i, 1);
+  renderImageUploads();
+}
+
+function resetImageField() {
+  currentImageUrls = [];
+  renderImageUploads();
+  document.getElementById('imgUploadStatus').textContent = '';
+  document.getElementById('imgFileInput').value = '';
+}
+
+async function handleImageSelect(input) {
+  const file = input.files[0];
+  if (!file) return;
+  input.value = '';
+  if (currentImageUrls.length >= 5) return;
+  const status = document.getElementById('imgUploadStatus');
+  status.textContent = 'Yuklanmoqda...';
+  const formData = new FormData();
+  formData.append('image', file);
+  formData.append('admin_id', admin.id);
+  try {
+    const res = await fetch('/api/admin/upload', { method: 'POST', body: formData });
+    const data = await res.json();
+    if (data.url) {
+      currentImageUrls.push(data.url);
+      renderImageUploads();
+      status.textContent = '';
+    } else {
+      status.textContent = 'Xatolik: ' + (data.error || '');
+    }
+  } catch {
+    status.textContent = 'Xatolik';
+  }
+}
+
+async function saveQuestion() {
+  const payload = {
+    admin_id: admin.id,
+    question_text: document.getElementById('qText').value.trim(),
+    option_a: document.getElementById('qOptA').value.trim(),
+    option_b: document.getElementById('qOptB').value.trim(),
+    option_c: document.getElementById('qOptC').value.trim(),
+    option_d: document.getElementById('qOptD').value.trim(),
+    option_e: document.getElementById('qOptE').value.trim(),
+    correct_answer: document.getElementById('qCorrect').value,
+    time_seconds: parseInt(document.getElementById('qTime').value) || 30,
+    image_urls: [...currentImageUrls]
+  };
+
+  if (payload.correct_answer === 'e' && !payload.option_e) {
+    document.getElementById('qFormErr').innerHTML =
+      '<div class="alert alert-error" style="margin-bottom:10px;font-size:13px">E to\'g\'ri javob deb belgilandi, lekin E varianti bo\'sh</div>';
+    return;
+  }
+
+  if (!payload.question_text || !payload.option_a || !payload.option_b ||
+      !payload.option_c || !payload.option_d || !payload.correct_answer) {
+    document.getElementById('qFormErr').innerHTML =
+      '<div class="alert alert-error" style="margin-bottom:10px;font-size:13px">Barcha maydonlarni to\'ldiring</div>';
+    return;
+  }
+
+  const btn = document.getElementById('qSaveBtn');
+  btn.disabled = true; btn.textContent = '...';
+
+  try {
+    const url = editingId ? `/api/admin/questions/${editingId}` : '/api/admin/questions';
+    const method = editingId ? 'PUT' : 'POST';
+    const res = await fetch(url, {
+      method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    if (data.error) {
+      document.getElementById('qFormErr').innerHTML =
+        `<div class="alert alert-error" style="margin-bottom:10px;font-size:13px">${data.error}</div>`;
+      return;
+    }
+    cancelForm();
+    loadQuestions();
+  } catch {
+    document.getElementById('qFormErr').innerHTML =
+      '<div class="alert alert-error" style="margin-bottom:10px;font-size:13px">Serverda xatolik</div>';
+  } finally {
+    btn.disabled = false; btn.textContent = '✓ Saqlash';
+  }
+}
+
+async function deleteQuestion(id, title) {
+  if (!confirm(`"${title}..." savolini o'chirasizmi?\n\nBu amalni qaytarib bo'lmaydi!`)) return;
+  try {
+    const res = await fetch(`/api/admin/questions/${id}`, {
+      method: 'DELETE', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ admin_id: admin.id })
+    });
+    const data = await res.json();
+    if (data.success) loadQuestions();
+    else alert(data.error || "O'chirishda xatolik");
+  } catch { alert("O'chirishda xatolik"); }
+}
+
+// ── Students panel ─────────────────────────────────────────────────
+
+let allStudents = [];
+
+/** Saralash usullari. Topshirmaganlar har doim oxirida turadi. */
+const STUDENT_SORTS = {
+  'score-desc': (a, b) => {
+    const d = (b.completed_at ? 1 : 0) - (a.completed_at ? 1 : 0);
+    if (d) return d;
+    if (!a.completed_at) return new Date(b.registered_at) - new Date(a.registered_at);
+    return (b.score - a.score) || (new Date(a.completed_at) - new Date(b.completed_at));
+  },
+  'score-asc': (a, b) => {
+    const d = (b.completed_at ? 1 : 0) - (a.completed_at ? 1 : 0);
+    if (d) return d;
+    if (!a.completed_at) return new Date(b.registered_at) - new Date(a.registered_at);
+    return (a.score - b.score) || (new Date(a.completed_at) - new Date(b.completed_at));
+  },
+  'name-asc': (a, b) => String(a.name || '').localeCompare(String(b.name || ''), 'uz'),
+  'recent':   (a, b) => new Date(b.registered_at) - new Date(a.registered_at)
+};
+
+async function loadStudents() {
+  const body = document.getElementById('sPanelBody');
+  body.innerHTML = '<div class="panel-loading"><div class="spin-sm"></div> Yuklanmoqda...</div>';
+  openStudentId = null;
+  try {
+    const res = await fetch(`/api/admin/students?admin_id=${admin.id}`);
+    allStudents = await res.json();
+
+    const completed = allStudents.filter(s => s.completed_at);
+    const total = allStudents[0]?.total || 0;
+    document.getElementById('statTotal').textContent = allStudents.length;
+    document.getElementById('statDone').textContent = completed.length;
+    document.getElementById('statWait').textContent = allStudents.length - completed.length;
+    const avg = completed.length
+      ? (completed.reduce((s, x) => s + x.score, 0) / completed.length).toFixed(1)
+      : '—';
+    document.getElementById('statAvg').textContent = completed.length ? `${avg}/${total}` : '—';
+
+    applyStudentView();
+  } catch {
+    body.innerHTML = '<div class="panel-loading" style="color:#ef4444">Yuklanmadi.</div>';
+  }
+}
+
+/** Qidiruv va saralashni qo'llab, ro'yxatni qayta chizadi. */
+function applyStudentView() {
+  const body = document.getElementById('sPanelBody');
+  const q    = (document.getElementById('sSearch').value || '').trim().toLowerCase();
+  const mode = document.getElementById('sSort').value;
+
+  document.getElementById('sClear').hidden = !q;
+  openStudentId = null;
+
+  let list = allStudents.slice();
+  if (q) {
+    list = list.filter(s =>
+      String(s.name || '').toLowerCase().includes(q) ||
+      String(s.phone || '').includes(q) ||
+      String(s.passport_id || '').toLowerCase().includes(q) ||
+      String(s.parent_phone || '').includes(q)
+    );
+  }
+  list.sort(STUDENT_SORTS[mode] || STUDENT_SORTS['score-desc']);
+
+  document.getElementById('sPanelTag').textContent =
+    q ? `${list.length} / ${allStudents.length} ta` : `${allStudents.length} ta`;
+
+  renderStudents(body, list, q, mode);
+}
+
+function clearStudentSearch() {
+  const el = document.getElementById('sSearch');
+  el.value = '';
+  el.focus();
+  applyStudentView();
+}
+
+/** Matnni HTML-xavfsiz qiladi va topilgan bo'lakni <mark> bilan belgilaydi. */
+function hl(text, q) {
+  const raw = String(text == null ? '' : text);
+  if (!q) return esc(raw);
+  const i = raw.toLowerCase().indexOf(q);
+  if (i < 0) return esc(raw);
+  return esc(raw.slice(0, i)) + '<mark>' + esc(raw.slice(i, i + q.length)) + '</mark>' + esc(raw.slice(i + q.length));
+}
+
+function scoreClass(score, total) {
+  if (total === 0) return 'score-none';
+  const p = score / total;
+  if (p >= 0.7) return 'score-good';
+  if (p >= 0.5) return 'score-mid';
+  return 'score-bad';
+}
+
+function renderStudents(body, students, q, mode) {
+  if (!students.length) {
+    body.innerHTML = q
+      ? `<div class="panel-empty"><div class="ei">🔍</div><span>«${esc(q)}» bo'yicha hech kim topilmadi</span></div>`
+      : '<div class="panel-empty"><div class="ei">👤</div><span>Hali hech kim ro\'yxatdan o\'tmagan</span></div>';
+    return;
+  }
+  const ranked = mode === 'score-desc';
+  body.innerHTML = students.map((s, i) => {
+    const done = !!s.completed_at;
+    const initial = String(s.name || '?').charAt(0).toUpperCase();
+    const pct = s.total ? Math.round(s.score / s.total * 100) : 0;
+    const scoreHtml = done
+      ? `<span class="score-big ${scoreClass(s.score, s.total)}">${s.score}/${s.total}</span><br>
+         <span style="font-size:11px;color:#94a3b8">${pct}%</span>`
+      : `<span class="badge-pending">⏳ Kutilmoqda</span>`;
+    const medal = (ranked && done && i < 3) ? ['🥇','🥈','🥉'][i] : '';
+    const rankHtml = medal
+      ? `<div class="s-rank top">${medal}</div>`
+      : `<div class="s-rank">${i + 1}</div>`;
+    return `<div class="s-item" id="si-${s.id}">
+      <div class="s-row" onclick="toggleStudent(${s.id})">
+        ${rankHtml}
+        <div class="s-avatar">${esc(initial)}</div>
+        <div>
+          <div class="s-name">${hl(s.name, q)}${s.restricted
+            ? ' <span class="badge badge-error" style="font-size:10px;padding:2px 7px;vertical-align:middle">bloklangan</span>'
+            : ''}</div>
+          <div class="s-phone">${hl(s.phone, q)}</div>
+        </div>
+        <div class="s-score">${scoreHtml}</div>
+        <div class="s-chevron" id="chev-${s.id}">▶</div>
+      </div>
+      <div class="s-detail" id="sd-${s.id}">
+        <div class="panel-loading" style="padding:20px"><div class="spin-sm"></div> Yuklanmoqda...</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function toggleStudent(userId) {
+  const detail = document.getElementById(`sd-${userId}`);
+  const chev = document.getElementById(`chev-${userId}`);
+  const isOpen = detail.classList.contains('open');
+
+  // Close previously open
+  if (openStudentId && openStudentId !== userId) {
+    document.getElementById(`sd-${openStudentId}`).classList.remove('open');
+    document.getElementById(`chev-${openStudentId}`).classList.remove('open');
+  }
+
+  if (isOpen) {
+    detail.classList.remove('open');
+    chev.classList.remove('open');
+    openStudentId = null;
+    return;
+  }
+
+  detail.classList.add('open');
+  chev.classList.add('open');
+  openStudentId = userId;
+  detail.innerHTML = '<div class="panel-loading" style="padding:20px"><div class="spin-sm"></div> Yuklanmoqda...</div>';
+
+  try {
+    const [res, tRes] = await Promise.all([
+      fetch(`/api/admin/student/${userId}?admin_id=${admin.id}`),
+      fetch(`/api/admin/task-results/${userId}?admin_id=${admin.id}`)
+    ]);
+    const data = await res.json();
+    const taskResults = await tRes.json();
+    renderStudentDetail(detail, data);
+    detail.insertAdjacentHTML('beforeend', taskResultsHTML(taskResults));
+  } catch {
+    detail.innerHTML = '<div style="padding:16px;color:#ef4444;font-size:13px">Yuklanmadi.</div>';
+  }
+}
+
+/** Ro'yxatdan o'tishda kiritilgan ma'lumotlar. Eski o'quvchilarda bo'lmasa — chizilmaydi. */
+function studentInfoHTML(s) {
+  const row = (label, val) => val
+    ? `<div><span style="color:#94a3b8">${label}:</span> <strong>${esc(val)}</strong></div>`
+    : '';
+  const rows = row('Yashash joyi', s.address)
+             + row('Pasport / ID', s.passport_id)
+             + row('Ota-ona raqami', s.parent_phone);
+
+  // Bloklangan bo'lsa — sababi va blokni ochish tugmasi
+  const blocked = s.restricted ? `
+    <div class="alert alert-error" style="margin:8px 0 2px;font-size:12px">
+      <div style="flex:1">
+        <strong>Kirish taqiqlangan.</strong>
+        ${s.restrict_reason ? esc(s.restrict_reason) : ''}
+        ${s.restricted_at ? `<br><span style="opacity:.75">${new Date(s.restricted_at).toLocaleString('uz-UZ')}</span>` : ''}
+      </div>
+      <button class="btn btn-outline btn-sm" onclick="unrestrict(${s.id})">Blokni ochish</button>
+    </div>` : '';
+
+  if (!rows && !blocked) return '';
+  return `<div style="padding:10px 16px;display:grid;gap:4px;font-size:12px;
+                      background:var(--brand-50);border-bottom:1px solid var(--border)">${rows}${blocked}</div>`;
+}
+
+/** Blokni ochadi va o'quvchiga qayta 15 daqiqa beradi. */
+async function unrestrict(userId) {
+  if (!confirm("Blokni ochamizmi? O'quvchi qaytadan kirib, testni noldan boshlaydi.")) return;
+  try {
+    const res = await fetch(`/api/admin/unrestrict/${userId}`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ admin_id: admin.id })
+    });
+    const data = await res.json();
+    if (data.error) { alert(data.error); return; }
+    await loadStudents();
+  } catch { alert("Server bilan bog'lanishda xatolik"); }
+}
+
+function renderStudentDetail(container, data) {
+  const info = studentInfoHTML(data.student);
+
+  if (!data.attempt) {
+    container.innerHTML = info + `
+      <div style="padding:12px 16px;font-size:13px;color:#64748b">
+        Bu o'quvchi hali testni topshirmagan.<br>
+        <span style="color:#94a3b8">Ro'yxatdan o'tgan: ${new Date(data.student.created_at).toLocaleString('uz-UZ')}</span>
+      </div>`;
+    return;
+  }
+
+  const pct = Math.round(data.attempt.score / data.answers.length * 100);
+  const cls = pct >= 70 ? 'score-good' : pct >= 50 ? 'score-mid' : 'score-bad';
+
+  const rows = data.answers.map((a, i) => {
+    const ok = a.is_correct === 1;
+    const selLabel = a.selected_answer
+      ? `${LABELS[a.selected_answer]}) ${esc(a['option_' + a.selected_answer])}`
+      : '<em>Javob berilmadi</em>';
+    const corrLabel = `${LABELS[a.correct_answer]}) ${esc(a['option_' + a.correct_answer])}`;
+    return `<div class="sd-row ${ok ? 'ok' : 'ng'}">
+      <div class="sd-icon">${ok ? '✅' : '❌'}</div>
+      <div>
+        <div class="sd-qtext">${i + 1}. ${esc(a.question_text)}</div>
+        <div class="sd-ans">
+          Javob: <span class="${ok ? 'correct' : 'wrong'}">${selLabel}</span>
+          ${!ok ? ` &nbsp;·&nbsp; To'g'ri: <span class="correct">${corrLabel}</span>` : ''}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  container.innerHTML = info + `
+    <div class="sd-header">
+      <div class="sd-score ${cls}">${data.attempt.score}/${data.answers.length}</div>
+      <div>
+        <div style="font-weight:700;font-size:13px">${pct}% to'g'ri javob</div>
+        <div class="sd-info">Topshirilgan: ${new Date(data.attempt.completed_at).toLocaleString('uz-UZ')}</div>
+      </div>
+    </div>
+    <div>${rows}</div>`;
+}
+
+// ── Ovozli topshiriqlar (admin) ────────────────────────────────────
+
+let tasks = [];
+let editingTaskId = null;
+let pendingAudioUrl = null;
+
+function fmtMs(ms) {
+  const t = Math.round((ms || 0) / 1000);
+  return String(Math.floor(t / 60)).padStart(2, '0') + ':' + String(t % 60).padStart(2, '0');
+}
+
+async function loadTasks() {
+  const body = document.getElementById('tPanelBody');
+  body.innerHTML = '<div class="panel-loading"><div class="spin-sm"></div> Yuklanmoqda...</div>';
+  try {
+    const res = await fetch(`/api/admin/tasks?admin_id=${admin.id}`);
+    tasks = await res.json();
+    document.getElementById('tPanelTag').textContent = tasks.length + ' ta';
+    renderTasks();
+  } catch {
+    body.innerHTML = '<div class="panel-loading" style="color:#ef4444">Yuklanmadi.</div>';
+  }
+}
+
+function renderTasks() {
+  const body = document.getElementById('tPanelBody');
+  if (!tasks.length) {
+    body.innerHTML = '<div class="panel-empty"><div class="ei">🎧</div><span>Hali topshiriq qo\'shilmagan</span></div>';
+    return;
+  }
+  body.innerHTML = tasks.map(t => {
+    const isDict = t.type === 'dictation';
+    const srcTag = isDict
+      ? (t.audio_url ? '<span class="tk-tag audio">🎵 Audio</span>' : '<span class="tk-tag tts">🔊 Brauzer ovozi</span>')
+      : '';
+    return `<div class="tk-row">
+      <div class="tk-ico ${t.type}">${isDict ? '🎧' : '🎙️'}</div>
+      <div class="tk-main">
+        <div class="tk-title">${esc(t.title)}</div>
+        <div class="tk-text">${esc(t.text)}</div>
+      </div>
+      <div class="tk-tags">
+        ${srcTag}
+        <span class="tk-tag">${t.done_count} ta bajardi</span>
+        <button class="btn-icon edit" onclick="editTask(${t.id})" title="Tahrirlash">✏️</button>
+        <button class="btn-icon del" onclick="deleteTask(${t.id})" title="O'chirish">🗑</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleTaskForm() {
+  const form = document.getElementById('taskForm');
+  if (form.hidden) { resetTaskForm(); form.hidden = false; document.getElementById('tfTitle').focus(); }
+  else cancelTaskForm();
+}
+
+function resetTaskForm() {
+  editingTaskId = null;
+  pendingAudioUrl = null;
+  document.getElementById('tfType').value = 'dictation';
+  document.getElementById('tfTitle').value = '';
+  document.getElementById('tfText').value = '';
+  document.getElementById('tfAudio').value = '';
+  document.getElementById('tfAudioState').textContent = "Yuklanmasa — matn brauzer ovozi bilan o'qiladi";
+  document.getElementById('tfAudioPreview').hidden = true;
+  document.getElementById('tfSave').textContent = 'Saqlash';
+  document.getElementById('btnToggleTaskForm').textContent = '+ Yangi topshiriq';
+  onTaskTypeChange();
+}
+
+function cancelTaskForm() {
+  document.getElementById('taskForm').hidden = true;
+  resetTaskForm();
+}
+
+function onTaskTypeChange() {
+  const isDict = document.getElementById('tfType').value === 'dictation';
+  document.getElementById('tfAudioRow').hidden = !isDict;
+  document.getElementById('tfTextLabel').textContent = isDict
+    ? "Matn — diktantda bu to'g'ri javob hisoblanadi"
+    : "Matn — o'quvchi shuni ovoz chiqarib o'qiydi";
+}
+
+async function uploadTaskAudio() {
+  const input = document.getElementById('tfAudio');
+  const state = document.getElementById('tfAudioState');
+  const file = input.files && input.files[0];
+  if (!file) return;
+  state.textContent = 'Yuklanmoqda...';
+  const fd = new FormData();
+  fd.append('audio', file);
+  fd.append('admin_id', admin.id);
+  try {
+    const res = await fetch('/api/admin/upload-audio', { method: 'POST', body: fd });
+    const data = await res.json();
+    if (!data.success) { state.textContent = data.error || 'Yuklanmadi'; return; }
+    pendingAudioUrl = data.url;
+    state.textContent = '✅ Audio yuklandi';
+    const prev = document.getElementById('tfAudioPreview');
+    prev.src = data.url;
+    prev.hidden = false;
+  } catch {
+    state.textContent = 'Yuklashda xatolik';
+  }
+}
+
+function editTask(id) {
+  const t = tasks.find(x => x.id === id);
+  if (!t) return;
+  editingTaskId = id;
+  pendingAudioUrl = t.audio_url || null;
+  document.getElementById('taskForm').hidden = false;
+  document.getElementById('tfType').value = t.type;
+  document.getElementById('tfTitle').value = t.title;
+  document.getElementById('tfText').value = t.text;
+  document.getElementById('tfAudio').value = '';
+  document.getElementById('tfAudioState').textContent = t.audio_url ? '✅ Audio biriktirilgan' : "Yuklanmasa — matn brauzer ovozi bilan o'qiladi";
+  const prev = document.getElementById('tfAudioPreview');
+  if (t.audio_url) { prev.src = t.audio_url; prev.hidden = false; } else { prev.hidden = true; }
+  document.getElementById('tfSave').textContent = 'Yangilash';
+  document.getElementById('btnToggleTaskForm').textContent = '✕ Yopish';
+  onTaskTypeChange();
+  document.getElementById('taskForm').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+async function saveTask() {
+  const type  = document.getElementById('tfType').value;
+  const title = document.getElementById('tfTitle').value.trim();
+  const text  = document.getElementById('tfText').value.trim();
+  if (!title || !text) { alert("Sarlavha va matn to'ldirilishi shart"); return; }
+
+  const btn = document.getElementById('tfSave');
+  btn.disabled = true;
+  const url = editingTaskId ? `/api/admin/tasks/${editingTaskId}` : '/api/admin/tasks';
+  try {
+    const res = await fetch(url, {
+      method: editingTaskId ? 'PUT' : 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ admin_id: admin.id, type, title, text, audio_url: pendingAudioUrl })
+    });
+    const data = await res.json();
+    if (!data.success) { alert(data.error || 'Saqlanmadi'); return; }
+    cancelTaskForm();
+    loadTasks();
+  } catch {
+    alert('Serverga ulanib bo\'lmadi');
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+async function deleteTask(id) {
+  const t = tasks.find(x => x.id === id);
+  const warn = t && t.done_count
+    ? `\n\nDiqqat: ${t.done_count} ta o'quvchi natijasi ham o'chadi.`
+    : '';
+  if (!confirm(`"${t ? t.title : ''}" topshirig'i o'chirilsinmi?${warn}`)) return;
+  try {
+    const res = await fetch(`/api/admin/tasks/${id}`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ admin_id: admin.id })
+    });
+    const data = await res.json();
+    if (data.success) loadTasks();
+    else alert(data.error || "O'chirishda xatolik");
+  } catch { alert("O'chirishda xatolik"); }
+}
+
+const TR_KIND = { dictation: 'Diktant', reading: "O'qish" };
+
+/** O'quvchi tafsilotiga qo'shiladigan ovozli topshiriq natijalari.
+ *  Barcha topshiriqlar chiziladi — bajarilmaganlari ham, shuning uchun
+ *  kim nimani tashlab ketgani darhol ko'rinadi. */
+function taskResultsHTML(list) {
+  if (!Array.isArray(list) || !list.length) {
+    return `<div style="padding:10px 16px 14px;font-size:12px;color:#94a3b8;border-top:1px solid #f0f0f0">
+              Ovozli topshiriqlar qo'shilmagan
+            </div>`;
+  }
+
+  const doneCount = list.filter(r => r.done).length;
+  const rows = list.map(r => {
+    const kind = TR_KIND[r.type] || r.type;
+    const when = r.submitted_at ? new Date(r.submitted_at).toLocaleString('uz-UZ') : '';
+
+    // Bajarilmagan
+    if (!r.done) {
+      return `<div class="tr-row undone">
+        <div class="tr-badge miss">yozmagan</div>
+        <div class="tr-main">
+          <div class="tr-title">${esc(r.task_title)}</div>
+          <div class="tr-meta">${kind} · topshirmagan</div>
+          ${r.reference_text ? `<details class="tr-det">
+            <summary>Topshiriq matni</summary>
+            <div class="tr-text ref">${esc(r.reference_text)}</div>
+          </details>` : ''}
+        </div>
+      </div>`;
+    }
+
+    // Diktant — eshitib yozgan matni
+    if (r.type === 'dictation') {
+      const acc = r.accuracy == null ? null : r.accuracy;
+      const cls = acc >= 90 ? 'score-good' : acc >= 70 ? 'score-mid' : 'score-bad';
+      const empty = !r.typed_text || !r.typed_text.trim();
+      return `<div class="tr-row">
+        <div class="tr-badge ok">yozgan</div>
+        <div class="tr-main">
+          <div class="tr-title">${esc(r.task_title)}</div>
+          <div class="tr-meta">
+            ${acc == null ? '' : `<span class="${cls}" style="font-weight:800">${acc}%</span> aniqlik · `}
+            ${fmtMs(r.elapsed_ms)} · ${r.wpm ?? 0} so'z/daq ·
+            ${r.typed_words ?? 0}/${r.ref_words ?? 0} so'z${when ? ' · ' + when : ''}
+          </div>
+          <details class="tr-det" open>
+            <summary>Yozgan matni va to'g'ri matn</summary>
+            <div class="tr-text">${empty
+              ? '<i style="color:#94a3b8">bo\'sh qoldirgan</i>'
+              : esc(r.typed_text)}</div>
+            ${r.reference_text
+              ? `<div class="tr-text ref"><b>To'g'ri matn:</b><br>${esc(r.reference_text)}</div>`
+              : ''}
+          </details>
+        </div>
+      </div>`;
+    }
+
+    // O'qish — ovoz yozuvi
+    return `<div class="tr-row">
+      <div class="tr-badge ok">yozgan</div>
+      <div class="tr-main">
+        <div class="tr-title">${esc(r.task_title)}</div>
+        <div class="tr-meta">${kind} · ${fmtMs(r.elapsed_ms)}${when ? ' · ' + when : ''}</div>
+        ${r.recording_url
+          ? `<audio controls preload="none" src="${esc(r.recording_url)}"
+                    style="width:100%;max-width:320px;margin-top:6px"></audio>
+             <div class="tr-meta"><a href="${esc(r.recording_url)}" download>Yozuvni yuklab olish</a></div>`
+          : '<div class="tr-meta" style="color:#b91c1c">Yozuv fayli topilmadi</div>'}
+        ${r.reference_text ? `<details class="tr-det">
+          <summary>O'qishi kerak bo'lgan matn</summary>
+          <div class="tr-text ref">${esc(r.reference_text)}</div>
+        </details>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+
+  return `<div class="tr-wrap">
+    <div class="tr-head">Ovozli topshiriqlar — ${doneCount} / ${list.length} bajarilgan</div>
+    ${rows}</div>`;
+}
+
+// ── Init ───────────────────────────────────────────────────────────
+loadQuestions();
+loadStudents();
+loadTasks();
+</script>
+</body>
+</html>

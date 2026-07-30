@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Academy — Ro'yxatdan o'tish</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="icon" type="image/png" href="/assets/favicon.png"/>
+</head>
+<body>
+<div class="auth-page">
+  <div class="auth-box">
+    <div class="auth-logo">
+      <img class="logo-mark" src="/assets/mark-green.png" alt="AI Academy"/>
+      <h1>AI Academy</h1>
+      <p>Ro'yxatdan o'ting va testni boshlang</p>
+    </div>
+
+    <div id="alertBox"></div>
+
+    <!-- Yagona forma. Raqam allaqachon ro'yxatda bo'lsa,
+         9 ta raqam kiritilgan zahoti avtomatik ichkariga o'tkaziladi. -->
+    <div id="stepForm">
+      <div class="form-group">
+        <label class="form-label" for="phoneInput">Telefon raqam</label>
+        <div style="position:relative">
+          <input id="phoneInput" class="form-input" type="text" inputmode="numeric"
+            placeholder="901234567" maxlength="9" autocomplete="tel"
+            oninput="onPhoneInput(this)" onkeydown="blockNonDigit(event)"
+            onpaste="handlePaste(event)"
+            style="padding-right:58px;letter-spacing:1px;font-weight:600"/>
+          <span class="fld-counter" id="phoneCounter">0/9</span>
+        </div>
+        <p class="form-hint">Operator kodi bilan, 9 ta raqam</p>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="nameInput">Ism va familiya</label>
+        <input id="nameInput" class="form-input" type="text"
+          placeholder="Masalan: Alisher Nazarov" maxlength="80" autocomplete="name"/>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="addressInput">Yashash joyi</label>
+        <input id="addressInput" class="form-input" type="text"
+          placeholder="Masalan: Toshkent sh., Chilonzor t., 5-kvartal"
+          maxlength="160" autocomplete="street-address"/>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="passportInput">Pasport yoki ID karta raqami</label>
+        <input id="passportInput" class="form-input" type="text" placeholder="AA1234567"
+          maxlength="9" autocapitalize="characters" oninput="onPassportInput(this)"
+          style="letter-spacing:1px;font-weight:600;text-transform:uppercase"/>
+        <p class="form-hint">2 ta harf va 7 ta raqam — masalan AA1234567</p>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="parentInput">Ota yoki ona raqami</label>
+        <div style="position:relative">
+          <input id="parentInput" class="form-input" type="text" inputmode="numeric"
+            placeholder="901234567" maxlength="9" autocomplete="tel"
+            oninput="onParentInput(this)" onkeydown="blockNonDigit(event)"
+            onpaste="handlePaste(event)"
+            style="padding-right:58px;letter-spacing:1px;font-weight:600"/>
+          <span class="fld-counter" id="parentCounter">0/9</span>
+        </div>
+      </div>
+
+      <button class="btn btn-primary btn-block btn-lg" id="submitBtn"
+        onclick="handleRegister()">Ro'yxatdan o'tish</button>
+    </div>
+
+    <!-- Kirishi taqiqlangan o'quvchi -->
+    <div id="stepBlocked" class="hidden">
+      <div class="alert alert-error" style="flex-direction:column;align-items:flex-start;gap:8px">
+        <strong>Kirish taqiqlangan</strong>
+        <span id="blockedMsg"></span>
+      </div>
+      <p class="form-hint" style="text-align:center;margin-top:14px">
+        Bu qaror o'qituvchi tomonidan bekor qilinishi mumkin.
+      </p>
+    </div>
+
+    <!-- Testni allaqachon topshirgan o'quvchi -->
+    <div id="stepDone" class="hidden">
+      <div class="alert alert-success" style="flex-direction:column;align-items:flex-start;gap:6px">
+        <strong id="doneTitle">Test topshirilgan</strong>
+        <span id="doneMsg"></span>
+      </div>
+      <button class="btn btn-outline btn-block mt-4" onclick="backToForm()">Boshqa raqam bilan kirish</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// Eski sessiyani tozalaymiz
+localStorage.removeItem('academyUser');
+
+function esc(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g,
+    c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+}
+
+function blockNonDigit(e) {
+  if (e.ctrlKey || e.metaKey ||
+      ['Backspace','Delete','ArrowLeft','ArrowRight','Tab','Home','End','Enter'].includes(e.key)) return;
+  if (!/^\d$/.test(e.key) || e.target.value.length >= 9) e.preventDefault();
+}
+
+function handlePaste(e) {
+  e.preventDefault();
+  const text = (e.clipboardData || window.clipboardData).getData('text');
+  e.target.value = text.replace(/\D/g, '').slice(0, 9);
+  if (e.target.id === 'parentInput') onParentInput(e.target);
+  else onPhoneInput(e.target);
+}
+
+/** Hisoblagichni yangilaydi (0/9 → 9/9). */
+function setCounter(id, len) {
+  const c = document.getElementById(id);
+  c.textContent = len + '/9';
+  c.classList.toggle('full', len === 9);
+}
+
+function onPhoneInput(el) {
+  el.value = el.value.replace(/\D/g, '').slice(0, 9);
+  setCounter('phoneCounter', el.value.length);
+  maybeRouteExisting(el.value);
+}
+
+function onParentInput(el) {
+  el.value = el.value.replace(/\D/g, '').slice(0, 9);
+  setCounter('parentCounter', el.value.length);
+}
+
+/** Pasport / ID karta: 2 ta lotin harfi + 7 ta raqam (AA1234567). */
+function onPassportInput(el) {
+  const raw = el.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+  const letters = raw.slice(0, 2).replace(/[^A-Z]/g, '');
+  el.value = letters + raw.slice(letters.length).replace(/\D/g, '').slice(0, 7);
+}
+
+function showAlert(msg, type = 'error') {
+  const box = document.getElementById('alertBox');
+  box.innerHTML = `<div class="alert alert-${type}">${esc(msg)}</div>`;
+  setTimeout(() => box.innerHTML = '', 5000);
+}
+
+/* ── Allaqachon ro'yxatda bo'lganlar ────────────────────────────────
+   Forma bitta sahifada, lekin qaytib kelgan o'quvchi hamma maydonni
+   qaytadan to'ldirmasligi kerak. Raqam to'liq kiritilganda jimgina
+   tekshiramiz: bor bo'lsa — darhol ichkariga o'tkazamiz. */
+let lastChecked = '';
+
+async function maybeRouteExisting(phone) {
+  if (phone.length !== 9 || phone === lastChecked) return;
+  lastChecked = phone;
+  try {
+    const res = await fetch('/api/auth', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone })
+    });
+    const data = await res.json();
+    if (data.restricted) { showBlocked(data.error); return; }
+    if (data.needs_registration || !data.success) return;  // yangi o'quvchi — formada qoladi
+    routeUser(data);
+  } catch { /* aloqa yo'q bo'lsa formada qolamiz */ }
+}
+
+/** Kirishi taqiqlangan — formani yopamiz, qayta urinish yo'q. */
+function showBlocked(msg) {
+  document.getElementById('stepForm').classList.add('hidden');
+  document.getElementById('stepDone').classList.add('hidden');
+  document.getElementById('alertBox').innerHTML = '';
+  document.getElementById('blockedMsg').textContent =
+    msg || "Test qoidasi buzilgani uchun kirish taqiqlangan.";
+  document.getElementById('stepBlocked').classList.remove('hidden');
+}
+
+function routeUser(data) {
+  localStorage.setItem('academyUser', JSON.stringify({
+    ...data.user,
+    quiz_completed: data.quiz_completed || false,
+    score: data.score,
+    total: data.total
+  }));
+  if (data.user.is_admin) { window.location.href = '/admin.html'; return; }
+  if (data.quiz_completed) { showDone(data); return; }
+  window.location.href = '/quiz.html';
+}
+
+function showDone(data) {
+  document.getElementById('stepForm').classList.add('hidden');
+  document.getElementById('stepDone').classList.remove('hidden');
+  const pct = data.total ? Math.round((data.score / data.total) * 100) : 0;
+  document.getElementById('doneMsg').innerHTML =
+    `<strong>${esc(data.user.name)}</strong>, siz bu testni allaqachon topshirgansiz.<br>
+     Natija: <strong>${data.score}/${data.total}</strong> (${pct}%)`;
+}
+
+function backToForm() {
+  document.getElementById('stepDone').classList.add('hidden');
+  document.getElementById('stepForm').classList.remove('hidden');
+  const el = document.getElementById('phoneInput');
+  el.value = '';
+  setCounter('phoneCounter', 0);
+  lastChecked = '';
+  document.getElementById('alertBox').innerHTML = '';
+  el.focus();
+}
+
+async function handleRegister() {
+  const phone    = document.getElementById('phoneInput').value.trim();
+  const name     = document.getElementById('nameInput').value.trim();
+  const address  = document.getElementById('addressInput').value.trim();
+  const passport = document.getElementById('passportInput').value.trim().toUpperCase();
+  const parent   = document.getElementById('parentInput').value.trim();
+
+  if (phone.length !== 9) return focusFail('phoneInput', "Telefon raqam aynan 9 ta raqamdan iborat bo'lishi kerak");
+  if (!name)              return focusFail('nameInput', "Ism va familiyangizni kiriting");
+  if (!address)           return focusFail('addressInput', "Yashash joyingizni kiriting");
+  if (!/^[A-Z]{2}\d{7}$/.test(passport)) {
+    return focusFail('passportInput', "Pasport / ID raqami AA1234567 ko'rinishida bo'lishi kerak");
+  }
+  if (parent.length !== 9) {
+    return focusFail('parentInput', "Ota yoki ona raqami aynan 9 ta raqamdan iborat bo'lishi kerak");
+  }
+  if (parent === phone) {
+    return focusFail('parentInput',
+      "Ota yoki ona raqami o'z raqamingizdan boshqa bo'lishi kerak");
+  }
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = "Ro'yxatdan o'tilmoqda...";
+
+  try {
+    const res = await fetch('/api/auth', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        phone, name, address,
+        passport_id: passport, parent_phone: parent
+      })
+    });
+    const data = await res.json();
+    if (data.restricted) { showBlocked(data.error); return; }
+    if (data.error) { showAlert(data.error); return; }
+    if (data.success) { routeUser(data); }
+  } catch {
+    showAlert("Server bilan bog'lanishda xatolik");
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Ro'yxatdan o'tish";
+  }
+}
+
+/** Xatoni ko'rsatib, muammoli maydonga fokusni qaytaradi. */
+function focusFail(id, msg) {
+  showAlert(msg);
+  const el = document.getElementById(id);
+  if (el) el.focus();
+}
+
+// Enter bilan yuborish
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Enter') return;
+  if (document.getElementById('stepForm').classList.contains('hidden')) return;
+  e.preventDefault();
+  handleRegister();
+});
+
+document.getElementById('phoneInput').focus();
+</script>
+</body>
+</html>

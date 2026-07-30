@@ -1,0 +1,552 @@
+/* ═══════════════════════════════════════════════════════════════════
+   AI ACADEMY — dizayn tizimi
+   Asosiy rang logotipdan olingan: #0A4629 (Saudiya bayrog'i yashili).
+   Oq fonda kontrast 10.9:1 — WCAG AAA.
+   ═══════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Brend yashili ── */
+  --brand-950: #04190E;
+  --brand-900: #062E1A;
+  --brand-800: #0A4629;   /* LOGOTIP RANGI — asosiy */
+  --brand-700: #0D5B36;
+  --brand-600: #117145;
+  --brand-500: #168A55;
+  --brand-400: #27A86C;
+  --brand-300: #5FC896;
+  --brand-200: #9CE0BE;
+  --brand-100: #D3F2E2;
+  --brand-50:  #EFFBF5;
+
+  /* ── Ikkilamchi urg'u: tilla (yashil bilan juftlikda) ── */
+  --gold-600: #9A7B0A;
+  --gold-500: #C9A227;
+  --gold-100: #FBF3D5;
+
+  /* ── Semantik ── */
+  --primary: var(--brand-800);
+  --primary-dark: var(--brand-900);
+  --primary-light: var(--brand-50);
+  --success: #157F3C;
+  --success-light: #E8F6EC;
+  --error: #C2261B;
+  --error-light: #FDF0EE;
+  --warning: #B45309;
+  --warning-light: #FEF3E2;
+
+  /* ── Sirtlar ── */
+  --bg: #F4F7F5;
+  --card: #FFFFFF;
+  --text: #10231A;
+  --text-muted: #5A6B62;
+  --text-faint: #8A968F;
+  --border: #DFE7E2;
+  --border-strong: #C3D1C9;
+
+  /* Soyalar yashil tusda — sof qora soyadan iliqroq ko'rinadi */
+  --shadow-sm: 0 1px 2px rgba(10,70,41,.06), 0 1px 3px rgba(10,70,41,.05);
+  --shadow: 0 2px 4px rgba(10,70,41,.06), 0 4px 12px rgba(10,70,41,.07);
+  --shadow-lg: 0 4px 8px rgba(10,70,41,.07), 0 12px 32px rgba(10,70,41,.10);
+  --shadow-xl: 0 8px 16px rgba(10,70,41,.08), 0 24px 60px rgba(10,70,41,.16);
+
+  /* Fokus halqasi — klaviatura bilan ishlaydiganlar uchun hayotiy muhim */
+  --focus: var(--brand-800);
+  --focus-halo: rgba(10,70,41,.20);
+
+  /* Bosish maydonining eng kichik o'lchami (WCAG 2.5.5 AAA = 44px).
+     Biz kattaroq olamiz — qo'li yo'q o'quvchi og'iz tayoqchasi,
+     bosh ko'rsatkichi yoki ko'z bilan boshqarishdan foydalanadi. */
+  --tap: 48px;
+  --tap-lg: 64px;
+
+  --r-sm: 8px;
+  --r: 12px;
+  --r-lg: 16px;
+  --r-xl: 22px;
+
+  --font: 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ═══ FOKUS ═══════════════════════════════════════════════════════
+   Hech qachon o'chirilmaydi. Sichqonchasiz ishlayotgan o'quvchi
+   qayerda turganini har doim ko'rishi shart. */
+:focus { outline: none; }
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 6px var(--focus-halo);
+}
+/* Qorong'i fonda halqa oq bo'ladi — aks holda ko'rinmaydi */
+.on-dark :focus-visible,
+.auth-hero :focus-visible {
+  --focus: #FFFFFF;
+  --focus-halo: rgba(255,255,255,.30);
+}
+
+/* Klaviatura bilan sahifa boshiga o'tish havolasi */
+.skip-link {
+  position: absolute; left: 12px; top: -60px; z-index: 999;
+  background: var(--brand-800); color: #fff;
+  padding: 12px 20px; border-radius: var(--r);
+  font-weight: 700; text-decoration: none;
+  transition: top .15s;
+}
+.skip-link:focus { top: 12px; }
+
+/* Faqat ekran o'qiguvchi uchun */
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+}
+
+/* Harakatni kamaytirish so'ralgan bo'lsa — animatsiya yo'q */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ═══ TUGMALAR ════════════════════════════════════════════════════ */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+  min-height: var(--tap);
+  padding: 12px 22px; border-radius: var(--r);
+  border: 2px solid transparent;
+  font-family: inherit; font-size: 15px; font-weight: 650;
+  cursor: pointer; text-decoration: none;
+  transition: background .16s, border-color .16s, transform .12s, box-shadow .16s;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn-primary {
+  background: var(--brand-800); color: #fff;
+  box-shadow: 0 2px 8px rgba(10,70,41,.22);
+}
+.btn-primary:hover:not(:disabled) {
+  background: var(--brand-700); transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(10,70,41,.28);
+}
+.btn-primary:active:not(:disabled) { background: var(--brand-900); transform: translateY(0); }
+
+.btn-success { background: var(--success); color: #fff; box-shadow: 0 2px 8px rgba(21,127,60,.22); }
+.btn-success:hover:not(:disabled) { background: #10692F; transform: translateY(-1px); }
+
+.btn-danger { background: var(--error); color: #fff; box-shadow: 0 2px 8px rgba(194,38,27,.22); }
+.btn-danger:hover:not(:disabled) { background: #A61E15; transform: translateY(-1px); }
+
+.btn-outline {
+  background: #fff; color: var(--brand-800); border-color: var(--brand-800);
+}
+.btn-outline:hover:not(:disabled) { background: var(--brand-50); }
+
+.btn-ghost { background: transparent; color: var(--text-muted); }
+.btn-ghost:hover:not(:disabled) { background: var(--brand-50); color: var(--brand-800); }
+
+.btn-sm { min-height: 40px; padding: 8px 16px; font-size: 14px; border-radius: var(--r-sm); }
+.btn-lg { min-height: 56px; padding: 16px 30px; font-size: 17px; border-radius: var(--r-lg); }
+.btn:disabled { opacity: .45; cursor: not-allowed; transform: none; box-shadow: none; }
+.btn-block { width: 100%; }
+
+/* Klaviatura yorlig'i tugma ichida */
+kbd {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 22px; height: 22px; padding: 0 6px;
+  border-radius: 5px; background: rgba(255,255,255,.22);
+  border: 1px solid rgba(255,255,255,.35);
+  font-family: var(--font); font-size: 12px; font-weight: 700; line-height: 1;
+}
+.kbd-dark {
+  background: var(--brand-50); border-color: var(--border-strong);
+  color: var(--brand-800);
+}
+
+/* ═══ FORMA ═══════════════════════════════════════════════════════ */
+.form-group { margin-bottom: 18px; }
+.form-label {
+  display: block; margin-bottom: 7px;
+  font-weight: 650; font-size: 14.5px; color: var(--text);
+}
+.form-input, .form-textarea {
+  width: 100%; min-height: var(--tap);
+  padding: 13px 16px; border-radius: var(--r);
+  border: 2px solid var(--border); background: #fff;
+  font-family: inherit; font-size: 16px; color: var(--text);
+  transition: border-color .16s, box-shadow .16s;
+}
+.form-input:hover, .form-textarea:hover { border-color: var(--border-strong); }
+.form-input:focus, .form-textarea:focus {
+  border-color: var(--brand-800);
+  box-shadow: 0 0 0 4px var(--focus-halo);
+  outline: none;
+}
+.form-input::placeholder { color: var(--text-faint); }
+.form-input[readonly] { background: var(--brand-50); color: var(--text-muted); border-color: var(--border); }
+.form-hint { font-size: 12.5px; color: var(--text-muted); margin-top: 6px; }
+
+/* Raqam maydonlaridagi 0/9 hisoblagich */
+.fld-counter {
+  position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+  font-size: 12px; font-weight: 700; color: var(--text-faint);
+  font-variant-numeric: tabular-nums; pointer-events: none;
+  transition: color .16s;
+}
+.fld-counter.full { color: var(--brand-800); }
+
+/* Katta belgilash oynasi — kichik nishonga bosish qiyin bo'lganlar uchun */
+.check-row {
+  display: flex; align-items: flex-start; gap: 13px;
+  min-height: var(--tap);
+  padding: 14px 16px; border-radius: var(--r);
+  border: 2px solid var(--border); background: #fff;
+  cursor: pointer; transition: border-color .16s, background .16s;
+}
+.check-row:hover { border-color: var(--brand-300); background: var(--brand-50); }
+.check-row:has(input:checked) { border-color: var(--brand-800); background: var(--brand-50); }
+.check-row input[type="checkbox"] {
+  width: 24px; height: 24px; flex-shrink: 0; margin-top: 1px;
+  accent-color: var(--brand-800); cursor: pointer;
+}
+.check-row .ct { font-size: 14.5px; font-weight: 600; }
+.check-row .cs { font-size: 12.5px; color: var(--text-muted); margin-top: 3px; }
+
+/* ═══ KARTA ═══════════════════════════════════════════════════════ */
+.card {
+  background: var(--card); border-radius: var(--r-xl);
+  box-shadow: var(--shadow); padding: 28px;
+  border: 1px solid var(--border);
+}
+
+/* ═══ XABARLAR ════════════════════════════════════════════════════ */
+.alert {
+  padding: 13px 16px; border-radius: var(--r); font-size: 14px;
+  font-weight: 550; display: flex; align-items: flex-start; gap: 10px;
+  margin-bottom: 16px; line-height: 1.45;
+  border-left: 4px solid currentColor;
+}
+.alert-error   { background: var(--error-light);   color: #9B1D14; }
+.alert-success { background: var(--success-light); color: #0F5F2C; }
+.alert-info    { background: var(--brand-50);      color: var(--brand-800); }
+.alert-warning { background: var(--warning-light); color: #92400E; }
+
+/* ═══ NISHON ══════════════════════════════════════════════════════ */
+.badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 11px; border-radius: 99px;
+  font-size: 12px; font-weight: 700;
+}
+.badge-success { background: var(--success-light); color: #0F5F2C; }
+.badge-error   { background: var(--error-light);   color: #9B1D14; }
+.badge-warning { background: var(--warning-light); color: #92400E; }
+.badge-primary { background: var(--brand-100);     color: var(--brand-800); }
+.badge-gold    { background: var(--gold-100);      color: var(--gold-600); }
+
+/* ═══ KIRISH SAHIFASI ═════════════════════════════════════════════ */
+.auth-page {
+  min-height: 100vh; display: flex; align-items: center; justify-content: center;
+  padding: 24px 20px;
+  background:
+    radial-gradient(ellipse 90% 60% at 50% -10%, var(--brand-700) 0%, transparent 60%),
+    radial-gradient(ellipse 70% 50% at 15% 110%, var(--brand-900) 0%, transparent 55%),
+    var(--brand-950);
+  position: relative; overflow: hidden;
+}
+/* Logotipdagi "dumalab tushayotgan nuqtalar" motivi — nozik fon naqshi */
+.auth-page::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background-image:
+    radial-gradient(circle, rgba(255,255,255,.055) 1.5px, transparent 1.6px);
+  background-size: 34px 34px;
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, #000 30%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, #000 30%, transparent 75%);
+}
+.auth-box {
+  position: relative;
+  background: #fff; border-radius: 26px; padding: 42px 38px;
+  width: 100%; max-width: 460px;
+  box-shadow: 0 30px 70px rgba(2,20,11,.55), 0 0 0 1px rgba(255,255,255,.08);
+}
+.auth-logo { text-align: center; margin-bottom: 30px; }
+.auth-logo .logo-mark {
+  width: 96px; height: auto; margin: 0 auto 18px; display: block;
+}
+.auth-logo h1 {
+  font-size: 27px; font-weight: 800; color: var(--brand-800);
+  letter-spacing: -.4px;
+}
+.auth-logo p { color: var(--text-muted); font-size: 14.5px; margin-top: 5px; }
+
+/* ═══ TEST SAHIFASI ═══════════════════════════════════════════════ */
+.quiz-page { min-height: 100vh; background: var(--bg); }
+
+.quiz-topbar {
+  background: var(--brand-800); color: #fff;
+  padding: 12px 22px; display: flex; align-items: center;
+  justify-content: space-between; gap: 14px;
+  position: sticky; top: 0; z-index: 50;
+  box-shadow: 0 2px 12px rgba(10,70,41,.30);
+}
+.quiz-topbar .logo {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 17px; font-weight: 800; color: #fff; letter-spacing: -.2px;
+}
+.quiz-topbar .logo img { width: 30px; height: auto; display: block; }
+.quiz-topbar .user-info { font-size: 14px; color: rgba(255,255,255,.72); }
+.quiz-topbar .user-info strong { color: #fff; font-weight: 700; }
+
+.progress-wrap {
+  padding: 12px 22px; background: #fff;
+  border-bottom: 1px solid var(--border);
+}
+.progress-bar-bg {
+  height: 9px; background: var(--brand-100);
+  border-radius: 99px; overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%; border-radius: 99px;
+  background: linear-gradient(90deg, var(--brand-700), var(--brand-500));
+  transition: width .45s cubic-bezier(.4,0,.2,1);
+}
+.progress-labels {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 12.5px; color: var(--text-muted); margin-top: 7px; font-weight: 600;
+}
+.progress-labels strong { color: var(--brand-800); font-weight: 800; }
+
+.quiz-body { max-width: 720px; margin: 30px auto; padding: 0 18px; }
+.question-card {
+  background: #fff; border-radius: var(--r-xl); padding: 34px;
+  box-shadow: var(--shadow-lg); border: 1px solid var(--border);
+}
+.q-number {
+  font-size: 11px; font-weight: 800; color: var(--text-faint);
+  text-transform: uppercase; letter-spacing: 1.6px;
+}
+.q-text {
+  font-size: 21px; font-weight: 700; color: var(--text);
+  line-height: 1.45; margin-bottom: 24px; letter-spacing: -.2px;
+}
+
+/* ── Javob variantlari ──────────────────────────────────────────
+   Bular <button> elementlari (ilgari div edi — klaviatura bilan
+   javob berish umuman imkonsiz edi). Balandligi katta: og'iz
+   tayoqchasi yoki bosh ko'rsatkichi bilan ham osongina bosiladi. */
+.options { display: flex; flex-direction: column; gap: 11px; }
+.option {
+  display: flex; align-items: center; gap: 15px; width: 100%;
+  min-height: var(--tap-lg);
+  padding: 15px 18px; border-radius: var(--r-lg);
+  border: 2px solid var(--border); background: #fff;
+  font-family: inherit; text-align: left; color: var(--text);
+  cursor: pointer;
+  transition: border-color .15s, background .15s, transform .12s, box-shadow .15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.option:hover { border-color: var(--brand-400); background: var(--brand-50); }
+.option:active { transform: scale(.995); }
+.option.selected {
+  border-color: var(--brand-800); background: var(--brand-50);
+  box-shadow: inset 4px 0 0 var(--brand-800), 0 2px 10px rgba(10,70,41,.10);
+}
+.option.correct { border-color: var(--success); background: var(--success-light); }
+.option.wrong   { border-color: var(--error);   background: var(--error-light); }
+
+.option-letter {
+  width: 40px; height: 40px; border-radius: 11px; flex-shrink: 0;
+  background: var(--brand-50); color: var(--brand-800);
+  border: 2px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 15px;
+  transition: background .15s, color .15s, border-color .15s;
+}
+.option.selected .option-letter {
+  background: var(--brand-800); color: #fff; border-color: var(--brand-800);
+}
+.option.correct .option-letter { background: var(--success); color: #fff; border-color: var(--success); }
+.option.wrong   .option-letter { background: var(--error);   color: #fff; border-color: var(--error); }
+.option-text { font-size: 16.5px; font-weight: 550; line-height: 1.4; }
+
+/* Tanlangani rangdan tashqari belgi bilan ham bildiriladi —
+   rang ajratmaydiganlar uchun (WCAG 1.4.1) */
+.option .option-check {
+  margin-left: auto; flex-shrink: 0;
+  font-size: 20px; color: var(--brand-800);
+  opacity: 0; transform: scale(.6);
+  transition: opacity .15s, transform .15s;
+}
+.option.selected .option-check { opacity: 1; transform: scale(1); }
+
+.quiz-nav {
+  display: flex; justify-content: space-between; align-items: center;
+  gap: 14px; margin-top: 26px; flex-wrap: wrap;
+}
+
+/* ═══ NATIJA ══════════════════════════════════════════════════════ */
+.results-wrap { max-width: 720px; margin: 34px auto; padding: 0 18px; }
+.result-hero {
+  border-radius: var(--r-xl); padding: 46px 34px; text-align: center; color: #fff;
+  margin-bottom: 22px;
+  background:
+    radial-gradient(ellipse 80% 70% at 50% 0%, var(--brand-600) 0%, transparent 65%),
+    var(--brand-800);
+  box-shadow: var(--shadow-xl);
+}
+.result-score-circle {
+  width: 148px; height: 148px; border-radius: 50%;
+  background: rgba(255,255,255,.10); border: 3px solid rgba(255,255,255,.32);
+  margin: 0 auto 20px; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+}
+.result-score-num   { font-size: 50px; font-weight: 900; line-height: 1; }
+.result-score-total { font-size: 16px; opacity: .68; }
+.result-message { font-size: 24px; font-weight: 800; margin-bottom: 9px; letter-spacing: -.3px; }
+.result-sub     { font-size: 15.5px; opacity: .80; line-height: 1.6; }
+
+.answers-review { display: flex; flex-direction: column; gap: 10px; }
+.answer-item {
+  background: #fff; border-radius: var(--r); padding: 15px 18px;
+  display: flex; gap: 14px; align-items: flex-start;
+  box-shadow: var(--shadow-sm); border: 1px solid var(--border);
+}
+.answer-icon {
+  width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 16px;
+}
+.answer-icon.correct { background: var(--success-light); }
+.answer-icon.wrong   { background: var(--error-light); }
+.answer-qtext  { font-weight: 650; font-size: 14.5px; margin-bottom: 4px; }
+.answer-detail { font-size: 13.5px; color: var(--text-muted); }
+.answer-detail span { font-weight: 700; }
+.correct-label { color: var(--success); }
+.wrong-label   { color: var(--error); }
+
+/* ═══ JADVAL ══════════════════════════════════════════════════════ */
+.table-wrap {
+  background: #fff; border-radius: var(--r-lg);
+  box-shadow: var(--shadow); overflow: hidden; border: 1px solid var(--border);
+}
+.table-toolbar {
+  padding: 18px 22px; display: flex; align-items: center;
+  justify-content: space-between; border-bottom: 1px solid var(--border);
+}
+.table-toolbar h3 { font-size: 15px; font-weight: 750; }
+table { width: 100%; border-collapse: collapse; }
+th {
+  text-align: left; padding: 12px 20px; font-size: 11px;
+  font-weight: 800; text-transform: uppercase; letter-spacing: .6px;
+  color: var(--brand-800); background: var(--brand-50);
+  border-bottom: 1px solid var(--border);
+}
+td { padding: 13px 20px; font-size: 14px; border-bottom: 1px solid #F0F4F1; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: var(--brand-50); }
+.empty-state { text-align: center; padding: 58px 20px; color: var(--text-muted); }
+.empty-state .empty-icon { font-size: 46px; margin-bottom: 12px; }
+
+/* ═══ MODAL ═══════════════════════════════════════════════════════ */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(4,25,14,.55);
+  backdrop-filter: blur(3px);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1000; padding: 20px; opacity: 0;
+  transition: opacity .2s; pointer-events: none;
+}
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal {
+  background: #fff; border-radius: var(--r-xl); width: 100%;
+  max-width: 580px; max-height: 90vh; overflow-y: auto;
+  box-shadow: var(--shadow-xl);
+  transform: scale(.96); transition: transform .2s;
+}
+.modal-overlay.open .modal { transform: scale(1); }
+.modal-header {
+  padding: 20px 24px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; background: #fff; z-index: 1;
+}
+.modal-header h3 { font-size: 17px; font-weight: 750; }
+.modal-close {
+  width: 40px; height: 40px; border-radius: var(--r-sm); border: none;
+  background: var(--brand-50); color: var(--brand-800); cursor: pointer; font-size: 17px;
+  display: flex; align-items: center; justify-content: center; transition: background .15s;
+}
+.modal-close:hover { background: var(--brand-100); }
+.modal-body   { padding: 24px; }
+.modal-footer {
+  padding: 14px 24px; border-top: 1px solid var(--border);
+  display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap;
+}
+
+.answer-row {
+  display: flex; gap: 11px; align-items: flex-start;
+  padding: 11px 14px; border-radius: var(--r-sm); margin-bottom: 6px;
+}
+.answer-row.correct-row { background: var(--success-light); }
+.answer-row.wrong-row   { background: var(--error-light); }
+.answer-row .row-icon { font-size: 16px; flex-shrink: 0; margin-top: 2px; }
+.answer-row .row-q    { font-weight: 650; font-size: 14px; margin-bottom: 3px; }
+.answer-row .row-info { font-size: 13px; color: var(--text-muted); }
+
+/* ═══ SPINNER ═════════════════════════════════════════════════════ */
+.spinner {
+  width: 40px; height: 40px; border: 3px solid var(--brand-100);
+  border-top-color: var(--brand-800); border-radius: 50%;
+  animation: spin .7s linear infinite; margin: 40px auto;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ═══ MOSLASHUV ═══════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .quiz-body, .results-wrap { padding: 0 12px; margin: 18px auto; }
+  .auth-box { padding: 30px 22px; border-radius: 20px; }
+  .question-card { padding: 22px 18px; border-radius: var(--r-lg); }
+  .q-text { font-size: 18.5px; }
+  .option { padding: 13px 15px; gap: 12px; }
+  .option-text { font-size: 15.5px; }
+  .quiz-topbar { padding: 10px 14px; }
+  .quiz-topbar .user-info { font-size: 12.5px; }
+  .progress-wrap { padding: 10px 14px; }
+  .result-hero { padding: 34px 20px; }
+  .result-message { font-size: 20px; }
+}
+
+/* Katta masshtabda (Ctrl +) tugmalar ustma-ust tushmasin */
+@media (max-width: 420px) {
+  .quiz-nav { flex-direction: column; align-items: stretch; }
+  .quiz-nav .btn { width: 100%; }
+}
+
+/* Yuqori kontrast rejimi */
+@media (prefers-contrast: more) {
+  :root { --border: #9AAEA3; --border-strong: #6C8377; --text-muted: #3D4B44; }
+  .option { border-width: 3px; }
+}
+
+/* ═══ YORDAMCHI ═══════════════════════════════════════════════════ */
+.hidden       { display: none !important; }
+.text-center  { text-align: center; }
+.mt-4 { margin-top: 16px; }
+.mt-2 { margin-top: 8px; }
+.mb-4 { margin-bottom: 16px; }
+.flex { display: flex; }
+.items-center { align-items: center; }
+.gap-2 { gap: 8px; }
+.font-bold { font-weight: 700; }
+.text-sm { font-size: 13px; }
+.text-muted { color: var(--text-muted); }

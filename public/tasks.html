@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Academy — Ovozli topshiriqlar</title>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    .t-page { min-height: 100vh; background: var(--bg); }
+    .t-topbar {
+      background: #fff; border-bottom: 1px solid var(--border);
+      padding: 14px 24px; display: flex; align-items: center; gap: 14px;
+      position: sticky; top: 0; z-index: 50; box-shadow: 0 1px 3px rgba(0,0,0,.06);
+    }
+    .t-topbar .logo { font-size: 18px; font-weight: 800; color: #111; }
+    .t-topbar .who { margin-left: auto; font-size: 14px; color: var(--text-muted); }
+    .t-topbar .who strong { color: var(--text); }
+
+    .t-body { max-width: 760px; margin: 28px auto 60px; padding: 0 20px; }
+    .t-intro { margin-bottom: 20px; }
+    .t-intro h2 { font-size: 22px; font-weight: 800; letter-spacing: -.02em; }
+    .t-intro p { color: var(--text-muted); font-size: 14px; margin-top: 6px; }
+
+    .t-card {
+      background: #fff; border: 1px solid var(--border); border-radius: 16px;
+      box-shadow: var(--shadow); margin-bottom: 12px; overflow: hidden;
+    }
+    .t-head {
+      display: flex; align-items: center; gap: 12px;
+      padding: 15px 20px; cursor: pointer; user-select: none;
+    }
+    .t-head:hover { background: #fafafa; }
+    .t-kind {
+      width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center; font-size: 17px;
+    }
+    .t-kind.dictation { background: #f0f0f0; }
+    .t-kind.reading   { background: #111; }
+    .t-title { flex: 1; min-width: 0; }
+    .t-title b { display: block; font-size: 15px; font-weight: 700; color: #111; }
+    .t-title span { font-size: 12px; color: var(--text-muted); }
+    .t-chev { color: #bbb; font-size: 12px; transition: transform .2s; flex-shrink: 0; }
+    .t-card.open .t-chev { transform: rotate(90deg); }
+
+    .t-work { display: none; padding: 4px 20px 22px; border-top: 1px solid var(--border); }
+    .t-card.open .t-work { display: block; }
+
+    .t-label {
+      font-size: 11px; font-weight: 700; color: #888; text-transform: uppercase;
+      letter-spacing: 1.5px; margin: 18px 0 8px;
+    }
+    .t-reading-text {
+      background: #f5f5f5; border-radius: 12px; padding: 18px 20px;
+      font-size: 17px; line-height: 1.7; color: #111;
+    }
+    .t-typearea {
+      width: 100%; min-height: 130px; padding: 14px 16px; border-radius: 12px;
+      border: 2px solid var(--border); font-size: 15px; line-height: 1.6;
+      font-family: inherit; color: var(--text); resize: vertical; outline: none;
+      transition: border-color .18s, box-shadow .18s;
+    }
+    .t-typearea:focus { border-color: #555; box-shadow: 0 0 0 3px rgba(0,0,0,.07); }
+    .t-typearea:disabled { background: #fafafa; color: #666; }
+
+    .t-bar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+    .t-timer {
+      margin-left: auto; font-size: 15px; font-weight: 800; color: #111;
+      font-variant-numeric: tabular-nums; display: flex; align-items: center; gap: 6px;
+    }
+    .t-timer small { font-size: 11px; font-weight: 600; color: #999; text-transform: uppercase; letter-spacing: 1px; }
+
+    .rec-dot {
+      width: 9px; height: 9px; border-radius: 50%; background: var(--error);
+      display: inline-block; animation: recpulse 1s ease-in-out infinite;
+    }
+    @keyframes recpulse { 0%,100% { opacity: 1 } 50% { opacity: .25 } }
+
+    .t-wave { display: flex; align-items: flex-end; gap: 2px; height: 22px; }
+    .t-wave i { width: 3px; background: #111; border-radius: 2px; height: 3px; transition: height .08s linear; }
+
+    .t-done-pill {
+      background: var(--success-light); color: #15803d; font-size: 11px; font-weight: 700;
+      padding: 3px 9px; border-radius: 20px; flex-shrink: 0;
+    }
+    .t-empty { text-align: center; padding: 60px 20px; color: var(--text-muted); }
+    .t-empty .ei { font-size: 46px; margin-bottom: 10px; }
+
+    /* ── Yakunlash bloki ── */
+    .t-finish {
+      background: #fff; border: 1px solid var(--border); border-radius: 16px;
+      box-shadow: var(--shadow); padding: 20px 22px; margin-top: 22px;
+    }
+    .t-fin-top { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 12px; }
+    .t-fin-top b { font-size: 15px; font-weight: 700; color: #111; }
+    .t-fin-top span { font-size: 13px; color: var(--text-muted); margin-left: auto; font-variant-numeric: tabular-nums; }
+    .t-fin-bar { height: 6px; background: #e5e5e5; border-radius: 99px; overflow: hidden; margin-bottom: 16px; }
+    .t-fin-fill { height: 100%; background: #111; border-radius: 99px; width: 0%; transition: width .4s ease; }
+
+    /* Yakuniy ekran */
+    .t-done-hero {
+      background: #111; color: #fff; border-radius: 20px;
+      padding: 44px 32px; text-align: center; box-shadow: 0 8px 30px rgba(0,0,0,.2);
+    }
+    .t-done-hero .ico { font-size: 52px; margin-bottom: 14px; }
+    .t-done-hero h3 { font-size: 24px; font-weight: 800; margin-bottom: 6px; }
+    .t-done-hero p { font-size: 15px; opacity: .75; margin-bottom: 26px; line-height: 1.6; }
+    .t-done-hero .btn-primary { background: #fff; color: #111; }
+    .t-done-hero .btn-primary:hover { background: #e8e8e8; }
+
+    @media (max-width: 560px) {
+      .t-body { padding: 0 14px; margin-top: 18px; }
+      .t-head { padding: 13px 15px; }
+      .t-work { padding: 4px 15px 18px; }
+      .t-reading-text { font-size: 16px; padding: 15px 16px; }
+    }
+  </style>
+</head>
+<body>
+<div class="t-page">
+
+  <div class="t-topbar">
+    <span class="logo">🎓 AI Academy</span>
+    <button class="btn btn-ghost btn-sm" onclick="location.href='/quiz.html'">← Testga qaytish</button>
+    <span class="who">Xush kelibsiz, <strong id="whoName">—</strong></span>
+  </div>
+
+  <div class="t-body">
+    <div class="t-intro">
+      <h2>🎧 Ovozli topshiriqlar</h2>
+      <p>
+        Diktantda ovozni tinglab matnni yozasiz — sarflangan vaqt va aniqlik o'lchanadi.
+        O'qish topshirig'ida matnni ovoz chiqarib o'qiysiz, yozuv o'qituvchiga saqlanadi.
+      </p>
+    </div>
+
+    <div id="ttsWarn"></div>
+    <div id="taskList">
+      <div class="t-empty"><div class="spinner"></div></div>
+    </div>
+
+    <div class="t-finish" id="finishBox" hidden>
+      <div class="t-fin-top">
+        <b>Topshiriqlar bajarilishi</b>
+        <span id="finCount">0 / 0</span>
+      </div>
+      <div class="t-fin-bar"><div class="t-fin-fill" id="finFill"></div></div>
+      <button class="btn btn-primary btn-block btn-lg" onclick="finishAll()">✓ Yakunlash</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const user = JSON.parse(localStorage.getItem('academyUser') || 'null');
+if (!user || !user.id) location.href = '/';
+document.getElementById('whoName').textContent = user ? user.name : '—';
+
+let tasks = [];
+let results = {};          // task_id -> natija
+let openId = null;
+const timers = {};         // task_id -> { startedAt, handle }
+
+function esc(s) {
+  return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+}
+function fmtTime(ms) {
+  const t = Math.max(0, Math.round(ms / 1000));
+  return String(Math.floor(t / 60)).padStart(2,'0') + ':' + String(t % 60).padStart(2,'0');
+}
+
+// ── Brauzer ovozi (TTS) ─────────────────────────────────────────────
+let voices = [];
+function loadVoices() { voices = (window.speechSynthesis && window.speechSynthesis.getVoices()) || []; }
+loadVoices();
+if (window.speechSynthesis) window.speechSynthesis.onvoiceschanged = () => { loadVoices(); showTtsWarn(); };
+
+function pickVoice() {
+  const pref = ['uz', 'tr', 'ru', 'en'];
+  for (const p of pref) {
+    const v = voices.find(v => String(v.lang || '').toLowerCase().startsWith(p));
+    if (v) return v;
+  }
+  return voices[0] || null;
+}
+
+function showTtsWarn() {
+  const box = document.getElementById('ttsWarn');
+  if (!window.speechSynthesis) {
+    box.innerHTML = '<div class="alert alert-error">Brauzeringiz ovoz chiqarishni qo\'llab-quvvatlamaydi. Diktant uchun o\'qituvchi audio yuklashi kerak.</div>';
+    return;
+  }
+  const v = pickVoice();
+  const isUz = v && String(v.lang || '').toLowerCase().startsWith('uz');
+  box.innerHTML = (voices.length && !isUz)
+    ? `<div class="alert alert-info">Bu qurilmada o'zbekcha ovoz o'rnatilmagan — matn <strong>${esc(v ? v.lang : '?')}</strong> ovozi bilan o'qiladi, talaffuz to'liq to'g'ri bo'lmasligi mumkin. O'qituvchi tayyor audio yuklasa, o'sha ishlatiladi.</div>`
+    : '';
+}
+
+function speak(text, onEnd) {
+  if (!window.speechSynthesis) { onEnd && onEnd(); return; }
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  const v = pickVoice();
+  if (v) { u.voice = v; u.lang = v.lang; }
+  u.rate = 0.88;
+  u.onend = () => onEnd && onEnd();
+  u.onerror = () => onEnd && onEnd();
+  window.speechSynthesis.speak(u);
+}
+
+/** Tasodifiy tartib — Fisher–Yates. Har yuklanganda boshqacha chiqadi. */
+function shuffleRandom(list) {
+  const out = list.slice();
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const tmp = out[i]; out[i] = out[j]; out[j] = tmp;
+  }
+  return out;
+}
+
+// ── Yuklash ─────────────────────────────────────────────────────────
+async function load() {
+  try {
+    const [tRes, rRes] = await Promise.all([
+      fetch('/api/tasks'),
+      fetch(`/api/tasks/results/${user.id}`)
+    ]);
+    tasks = shuffleRandom(await tRes.json());
+    const arr = await rRes.json();
+    results = {};
+    arr.forEach(r => { results[r.task_id] = r; });
+    render();
+    showTtsWarn();
+  } catch {
+    document.getElementById('taskList').innerHTML =
+      '<div class="alert alert-error">Topshiriqlarni yuklab bo\'lmadi. Sahifani yangilang.</div>';
+  }
+}
+
+function render() {
+  const box = document.getElementById('taskList');
+  if (!tasks.length) {
+    box.innerHTML = '<div class="t-empty"><div class="ei">🎧</div><span>Hozircha topshiriq qo\'shilmagan</span></div>';
+    return;
+  }
+  box.innerHTML = tasks.map(t => {
+    const r = results[t.id];
+    const isDict = t.type === 'dictation';
+    const sub = isDict
+      ? (r ? 'Javobingiz saqlandi' : 'Ovozni tinglab matnni yozing')
+      : (r ? 'Yozuv saqlandi' : 'Matnni ovoz chiqarib o\'qing');
+    return `<div class="t-card" id="tc-${t.id}">
+      <div class="t-head" onclick="toggleTask(${t.id})">
+        <div class="t-kind ${t.type}">${isDict ? '🎧' : '🎙️'}</div>
+        <div class="t-title"><b>${esc(t.title)}</b><span>${esc(sub)}</span></div>
+        ${r ? '<span class="t-done-pill">✓ Bajarilgan</span>' : ''}
+        <span class="t-chev">▶</span>
+      </div>
+      <div class="t-work" id="tw-${t.id}"></div>
+    </div>`;
+  }).join('');
+  updateFinishBox();
+}
+
+/** Pastdagi yakunlash blokidagi progressni yangilaydi. */
+function updateFinishBox() {
+  const box = document.getElementById('finishBox');
+  if (!box) return;
+  if (!tasks.length) { box.hidden = true; return; }
+  box.hidden = false;
+  const done = tasks.filter(t => results[t.id]).length;
+  document.getElementById('finCount').textContent = done + ' / ' + tasks.length;
+  document.getElementById('finFill').style.width = Math.round(done / tasks.length * 100) + '%';
+}
+
+/** Barcha topshiriqlarni yakunlab, yakuniy ekranni ko'rsatadi. */
+function finishAll() {
+  const done = tasks.filter(t => results[t.id]);
+  const left = tasks.length - done.length;
+  if (left > 0 && !confirm(left + " ta topshiriq bajarilmadi. Baribir yakunlaysizmi?")) return;
+
+  stopSpeak();
+  if (recorder) { try { recorder.stop(); } catch {} }
+
+  document.getElementById('finishBox').hidden = true;
+  document.getElementById('ttsWarn').innerHTML = '';
+
+  // Baho va statistika ko'rsatilmaydi — ular faqat admin panelida
+  document.getElementById('taskList').innerHTML = `
+    <div class="t-done-hero">
+      <div class="ico">🎉</div>
+      <h3>Rahmat!</h3>
+      <p>Javoblaringiz saqlandi.<br>Natijalarni o'qituvchi ko'rib chiqadi.</p>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+        <a href="/" class="btn btn-primary btn-lg">🏠 Bosh sahifaga</a>
+        <button class="btn btn-ghost" style="color:rgba(255,255,255,.75)" onclick="location.reload()">← Topshiriqlarga qaytish</button>
+      </div>
+    </div>`;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function toggleTask(id) {
+  const card = document.getElementById(`tc-${id}`);
+  const open = card.classList.contains('open');
+  if (openId && openId !== id) {
+    document.getElementById(`tc-${openId}`).classList.remove('open');
+    stopTimer(openId);
+  }
+  if (window.speechSynthesis) window.speechSynthesis.cancel();
+  if (open) { card.classList.remove('open'); stopTimer(id); openId = null; return; }
+  card.classList.add('open');
+  openId = id;
+  const t = tasks.find(x => x.id === id);
+  document.getElementById(`tw-${id}`).innerHTML =
+    t.type === 'dictation' ? dictationHTML(t) : readingHTML(t);
+  if (results[id]) showSavedResult(t);
+}
+
+// ── Taymer ──────────────────────────────────────────────────────────
+function startTimer(id) {
+  if (timers[id]) return;
+  const el = document.getElementById(`tm-${id}`);
+  timers[id] = {
+    startedAt: Date.now(),
+    handle: setInterval(() => {
+      if (el) el.textContent = fmtTime(Date.now() - timers[id].startedAt);
+    }, 200)
+  };
+}
+function stopTimer(id) {
+  if (!timers[id]) return 0;
+  const ms = Date.now() - timers[id].startedAt;
+  clearInterval(timers[id].handle);
+  delete timers[id];
+  return ms;
+}
+
+// ── Diktant (ovoz → matn) ───────────────────────────────────────────
+function dictationHTML(t) {
+  return `
+    <div class="t-label">1. Ovozni tinglang</div>
+    <div class="t-bar">
+      ${t.audio_url
+        ? `<audio controls preload="metadata" src="${esc(t.audio_url)}" style="width:100%;max-width:420px" onplay="startTimer(${t.id})"></audio>`
+        : `<button class="btn btn-primary" id="play-${t.id}" onclick="playDictation(${t.id})">▶ Tinglash</button>
+           <button class="btn btn-ghost btn-sm" onclick="stopSpeak()">■ To'xtatish</button>`}
+      <div class="t-timer"><small>Vaqt</small><span id="tm-${t.id}">00:00</span></div>
+    </div>
+
+    <div class="t-label">2. Eshitganingizni yozing</div>
+    <textarea class="t-typearea" id="ta-${t.id}" placeholder="Matnni shu yerga yozing..."
+              oninput="startTimer(${t.id})" spellcheck="false"></textarea>
+
+    <div class="t-bar">
+      <button class="btn btn-primary" id="sub-${t.id}" onclick="submitDictation(${t.id})">Tekshirish</button>
+      <span style="font-size:12px;color:#999">Taymer birinchi harf yozilganda yoki ovoz qo'yilganda boshlanadi</span>
+    </div>
+    <div id="res-${t.id}"></div>`;
+}
+
+function playDictation(id) {
+  const t = tasks.find(x => x.id === id);
+  if (!t || !t.text) return;
+  startTimer(id);
+  const btn = document.getElementById(`play-${id}`);
+  if (btn) { btn.disabled = true; btn.textContent = '🔊 O\'qilmoqda...'; }
+  speak(t.text, () => {
+    if (btn) { btn.disabled = false; btn.textContent = '▶ Qayta tinglash'; }
+  });
+}
+function stopSpeak() { if (window.speechSynthesis) window.speechSynthesis.cancel(); }
+
+async function submitDictation(id) {
+  const ta = document.getElementById(`ta-${id}`);
+  const typed = ta.value.trim();
+  if (!typed) { alert('Avval eshitganingizni yozing'); return; }
+
+  const btn = document.getElementById(`sub-${id}`);
+  btn.disabled = true; btn.textContent = 'Tekshirilmoqda...';
+  const elapsed = stopTimer(id) || 1000;
+  stopSpeak();
+
+  try {
+    const res = await fetch('/api/tasks/dictation', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user_id: user.id, task_id: id, typed_text: typed, elapsed_ms: elapsed })
+    });
+    const data = await res.json();
+    if (!data.success) { alert(data.error || 'Xatolik'); return; }
+    results[id] = data.result;
+    ta.disabled = true;
+    document.getElementById(`res-${id}`).innerHTML = savedHTML();
+    refreshHead(id);
+  } catch {
+    alert('Serverga ulanib bo\'lmadi');
+  } finally {
+    btn.disabled = false; btn.textContent = 'Qayta topshirish';
+  }
+}
+
+/** O'quvchiga baho ko'rsatilmaydi — faqat saqlangani tasdiqlanadi.
+ *  Aniqlik, vaqt va terish tezligi admin panelida ko'rinadi. */
+function savedHTML() {
+  return `<div class="alert alert-success" style="margin-top:16px">
+            ✅ Javobingiz saqlandi — natijani o'qituvchi ko'radi
+          </div>`;
+}
+
+function showSavedResult(t) {
+  const r = results[t.id];
+  if (!r) return;
+  if (t.type === 'dictation') {
+    const ta = document.getElementById(`ta-${t.id}`);
+    if (ta) ta.value = r.typed_text || '';
+    document.getElementById(`res-${t.id}`).innerHTML = savedHTML();
+  } else {
+    const box = document.getElementById(`saved-${t.id}`);
+    if (box && r.recording_url) {
+      box.innerHTML = `<div class="t-label">Saqlangan yozuvingiz</div>
+        <audio controls preload="metadata" src="${esc(r.recording_url)}" style="width:100%;max-width:420px"></audio>`;
+    }
+  }
+}
+
+// ── O'qish (matn → ovoz) ────────────────────────────────────────────
+function readingHTML(t) {
+  return `
+    <div class="t-label">1. Matnni o'qing</div>
+    <div class="t-reading-text">${esc(t.text)}</div>
+    <div class="t-bar">
+      <button class="btn btn-outline btn-sm" onclick="speakReading(${t.id})">🔊 Namunani tinglash</button>
+      <button class="btn btn-ghost btn-sm" onclick="stopSpeak()">■ To'xtatish</button>
+    </div>
+
+    <div class="t-label">2. Ovoz chiqarib o'qing va yozib oling</div>
+    <div class="t-bar">
+      <button class="btn btn-danger" id="rec-${t.id}" onclick="toggleRec(${t.id})">● Yozishni boshlash</button>
+      <div class="t-wave" id="wave-${t.id}" hidden>${'<i></i>'.repeat(16)}</div>
+      <div class="t-timer"><small>Vaqt</small><span id="tm-${t.id}">00:00</span></div>
+    </div>
+    <div id="prev-${t.id}"></div>
+    <div id="saved-${t.id}"></div>`;
+}
+
+function speakReading(id) {
+  const t = tasks.find(x => x.id === id);
+  if (t) speak(t.text, null);
+}
+
+let recorder = null, recChunks = [], recStream = null, recTaskId = null;
+let audioCtx = null, analyser = null, rafId = null;
+
+async function toggleRec(id) {
+  const btn = document.getElementById(`rec-${id}`);
+  if (recorder && recTaskId === id) {
+    btn.disabled = true; btn.textContent = 'Saqlanmoqda...';
+    const elapsed = stopTimer(id) || 1000;
+    const blob = await stopRecording();
+    if (!blob || blob.size < 1000) {
+      alert('Yozuv juda qisqa chiqdi. Qaytadan urinib ko\'ring.');
+      btn.disabled = false; btn.textContent = '● Yozishni boshlash';
+      return;
+    }
+    await uploadRecording(id, blob, elapsed);
+    btn.disabled = false; btn.textContent = '● Qayta yozish';
+    return;
+  }
+
+  try {
+    recStream = await navigator.mediaDevices.getUserMedia({
+      audio: { echoCancellation: true, noiseSuppression: true, channelCount: 1 }
+    });
+  } catch {
+    alert('Mikrofonga ruxsat berilmadi. Brauzer sozlamalaridan ruxsat bering.');
+    return;
+  }
+
+  const cands = ['audio/webm;codecs=opus', 'audio/webm', 'audio/ogg;codecs=opus', 'audio/mp4'];
+  const mime = cands.find(m => window.MediaRecorder && MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(m));
+  const opts = { audioBitsPerSecond: 64000 };
+  if (mime) opts.mimeType = mime;
+
+  recorder = new MediaRecorder(recStream, opts);
+  recChunks = [];
+  recTaskId = id;
+  recorder.ondataavailable = e => { if (e.data && e.data.size) recChunks.push(e.data); };
+  recorder.start();
+  startTimer(id);
+  startWave(id);
+
+  btn.textContent = '■ To\'xtatish va saqlash';
+  document.getElementById(`prev-${id}`).innerHTML =
+    '<div style="display:flex;align-items:center;gap:8px;margin-top:10px;font-size:13px;color:#b91c1c">'
+    + '<span class="rec-dot"></span> Yozilmoqda...</div>';
+}
+
+function stopRecording() {
+  return new Promise(resolve => {
+    if (!recorder) return resolve(null);
+    recorder.onstop = () => {
+      const blob = recChunks.length ? new Blob(recChunks, { type: recorder.mimeType || 'audio/webm' }) : null;
+      if (recStream) { recStream.getTracks().forEach(t => t.stop()); recStream = null; }
+      stopWave();
+      recorder = null; recTaskId = null;
+      resolve(blob);
+    };
+    try { recorder.stop(); } catch { resolve(null); }
+  });
+}
+
+async function uploadRecording(id, blob, elapsed) {
+  const fd = new FormData();
+  fd.append('audio', blob, 'reading.webm');
+  fd.append('user_id', user.id);
+  fd.append('task_id', id);
+  fd.append('elapsed_ms', elapsed);
+  try {
+    const res = await fetch('/api/tasks/reading', { method: 'POST', body: fd });
+    const data = await res.json();
+    if (!data.success) { alert(data.error || 'Saqlanmadi'); return; }
+    results[id] = data.result;
+    document.getElementById(`prev-${id}`).innerHTML = '';
+    document.getElementById(`saved-${id}`).innerHTML =
+      `<div class="t-label">Saqlangan yozuvingiz</div>
+       <audio controls preload="metadata" src="${esc(data.result.recording_url)}" style="width:100%;max-width:420px"></audio>
+       <div class="alert alert-success" style="margin-top:12px">✅ Yozuv saqlandi — o'qituvchi tinglay oladi</div>`;
+    refreshHead(id);
+  } catch {
+    alert('Yuklab bo\'lmadi. Internetni tekshiring.');
+  }
+}
+
+// Yozuv paytidagi jonli to'lqin
+function startWave(id) {
+  const wave = document.getElementById(`wave-${id}`);
+  if (!wave) return;
+  wave.hidden = false;
+  const bars = wave.querySelectorAll('i');
+  try {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const src = audioCtx.createMediaStreamSource(recStream);
+    analyser = audioCtx.createAnalyser();
+    analyser.fftSize = 64;
+    src.connect(analyser);
+    const buf = new Uint8Array(analyser.frequencyBinCount);
+    const tick = () => {
+      if (!analyser) return;
+      analyser.getByteFrequencyData(buf);
+      bars.forEach((b, i) => {
+        const v = buf[i % buf.length] / 255;
+        b.style.height = Math.max(3, Math.round(v * 22)) + 'px';
+      });
+      rafId = requestAnimationFrame(tick);
+    };
+    tick();
+  } catch {}
+}
+function stopWave() {
+  if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+  if (audioCtx) { try { audioCtx.close(); } catch {} audioCtx = null; }
+  analyser = null;
+  document.querySelectorAll('.t-wave').forEach(w => { w.hidden = true; });
+}
+
+/** Kartochka sarlavhasidagi qisqa ma'lumotni yangilaydi. */
+function refreshHead(id) {
+  const t = tasks.find(x => x.id === id);
+  const r = results[id];
+  const head = document.querySelector(`#tc-${id} .t-title span`);
+  if (head && r) {
+    head.textContent = t.type === 'dictation' ? 'Javobingiz saqlandi' : 'Yozuv saqlandi';
+  }
+  const card = document.querySelector(`#tc-${id} .t-head`);
+  if (card && r && !card.querySelector('.t-done-pill')) {
+    const pill = document.createElement('span');
+    pill.className = 't-done-pill';
+    pill.textContent = '✓ Bajarilgan';
+    card.insertBefore(pill, card.querySelector('.t-chev'));
+  }
+  updateFinishBox();
+}
+
+window.addEventListener('beforeunload', () => { stopSpeak(); });
+
+load();
+</script>
+</body>
+</html>

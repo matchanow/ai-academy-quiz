@@ -1,0 +1,31 @@
+# ── Bog'liqliklar ──────────────────────────────────────────────────
+node_modules/
+
+# ── Shaxsiy ma'lumotlar ────────────────────────────────────────────
+# db/ ichida o'quvchilarning ism-familiyasi, telefon raqami,
+# pasport / ID raqami, ota-ona raqami va yashash joyi saqlanadi.
+# Bunday ma'lumot repoga tushmasligi kerak.
+# Server bo'sh bazada avtomatik seed qiladi (server.js), shuning uchun
+# klon qilib darhol ishga tushirish mumkin.
+db/
+
+# O'quvchilarning ovoz yozuvlari: a-<vaqt>-<kod>.webm
+# Diktant audiosi (dictation-*.ogg) esa repoda qoladi — u o'qituvchi
+# tayyorlagan test materiali.
+public/uploads/audio/a-*
+
+# ── Bu papkada turgan, loyihaga aloqasi yo'q ishlar ────────────────
+/Step one/
+/Universitet/
+/KiCad/
+/Desigen/
+
+# ── Muhit va tizim fayllari ────────────────────────────────────────
+.env
+.env.local
+*.log
+.DS_Store
+Thumbs.db
+
+# Claude Code'ning lokal sozlamalari
+.claude/settings.local.json
