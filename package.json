@@ -1,5 +1,5 @@
 {
-  "name": "ai-academy",
+  "name": "ai-academy-quiz",
   "version": "1.0.0",
   "description": "AI Academy test platformasi",
   "main": "server.js",
